@@ -8,6 +8,18 @@ define(['underscore', 'gamejs', 'globals'], function(_, gamejs, globals) {
     };
     gamejs.utils.objects.extend(Pokemon, gamejs.sprite.Sprite);
 
+    Pokemon.prototype.update = function(msDuration) {
+      // body...
+    };
+
+    Pokemon.prototype.draw = function(display) {
+      // body...
+    };
+
+    Pokemon.prototype.handle = function(event) {
+      // body...
+    };
+
     return {
         Pokemon: Pokemon
     };
