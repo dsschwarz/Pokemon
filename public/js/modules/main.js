@@ -1,15 +1,15 @@
-define(['underscore', 'gamejs', 'modules/globals' ], function(_, gamejs, globals) {
+define(['underscore', 'gamejs', 'modules/globals', 'modules/map' ], function(_, gamejs, globals, $map) {
     return function() {
         var display = gamejs.display.setMode(globals.game.screenSize);
-
+        var map = $map.Map();
         var tick = function(msDuration) {
 
             _.each(gamejs.event.get(), function(event) {
                 //Handle Event
-                console.warn(event);
+                // console.warn(event);
             });
-
-            console.warn(msDuration);
+            map.draw(display);
+            // console.warn(msDuration);
         };
 
         gamejs.time.fpsCallback(tick, this, globals.game.fps);

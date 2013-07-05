@@ -7,11 +7,10 @@ require.config({
     }
 });
 
-require(['jquery', 'gamejs', 'modules/main'], function($, gamejs, main) {
+require(['jquery', 'gamejs', 'modules/main', 'modules/globals'], function($, gamejs, main, globals) {
     // game init
-    var images = [
-
-    ];
-    gamejs.preload(images);
+    for (var image in globals.images){
+        gamejs.preload([globals.images[image]]);
+    }
     gamejs.ready(main);
 });
