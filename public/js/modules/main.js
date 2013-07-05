@@ -1,4 +1,4 @@
-define(['underscore', 'gamejs', 'modules/globals' ], function(_, gamejs, globals) {
+define(['underscore', 'gamejs', 'globals' ], function(_, gamejs, globals) {
     return function() {
         var display = gamejs.display.setMode(globals.game.screenSize);
 
