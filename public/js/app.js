@@ -4,6 +4,8 @@ require.config({
         jquery      : 'lib/jquery',
         underscore  : 'lib/underscore',
         gamejs      : 'lib/gamejs/gamejs',
+        main        : 'modules/main',
+        globals     : 'modules/globals',
     }
 });
 
