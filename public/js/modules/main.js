@@ -1,10 +1,10 @@
-define(['underscore', 'gamejs', 'modules/globals', 'modules/map' ], function(_, gamejs, globals, $map) {
+define(['underscore', 'gamejs', 'modules/globals', 'modules/map', 'modules/animation' ], function(_, $gamejs, $globals, $map, $anim) {
     return function() {
-        var display = gamejs.display.setMode(globals.game.screenSize);
+        var display = $gamejs.display.setMode($globals.game.screenSize);
         var map = $map.Map();
         var tick = function(msDuration) {
 
-            _.each(gamejs.event.get(), function(event) {
+            _.each($gamejs.event.get(), function(event) {
                 //Handle Event
                 // console.warn(event);
             });
@@ -12,6 +12,6 @@ define(['underscore', 'gamejs', 'modules/globals', 'modules/map' ], function(_, 
             // console.warn(msDuration);
         };
 
-        gamejs.time.fpsCallback(tick, this, globals.game.fps);
+        $gamejs.time.fpsCallback(tick, this, $globals.game.fps);
     };
 });

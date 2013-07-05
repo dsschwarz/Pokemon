@@ -1,4 +1,4 @@
-define(['gamejs', 'modules/globals', 'modules/maps'], function($gamejs, $globals, $maps) {
+define(['gamejs', 'modules/globals', 'modules/maps', 'modules/animation'], function($gamejs, $globals, $maps, $anim) {
 
 	Map = function() {
 		this.tiles = $maps[0]; // Two dimensional array of tiles
@@ -13,6 +13,8 @@ define(['gamejs', 'modules/globals', 'modules/maps'], function($gamejs, $globals
 		};
 		this.TILE_SIZE = [30,30];
 		this.playerPos = [0, 0];
+		this.spriteSheet = $anim.SpriteSheet($globals.images.sprites, [20, 24], [[0,0], [100,100]]);
+		console.log(this.spriteSheet)
 		this.tileImages = [$gamejs.transform.scale($gamejs.image.load($globals.images.grass), this.TILE_SIZE),
 							$gamejs.transform.scale($gamejs.image.load($globals.images.dirt), this.TILE_SIZE)];
 		
@@ -30,7 +32,8 @@ define(['gamejs', 'modules/globals', 'modules/maps'], function($gamejs, $globals
 				for (var j = range[1][1] - 1; j >= range[0][1]; j--) {
 					var tile = this.tiles[j][i];
 					var object = this.objects[j][i];
-					surface.blit(this.tileImages[tile], new $gamejs.Rect([i * this.TILE_SIZE[0], j * this.TILE_SIZE[1]], this.TILE_SIZE));
+					surface.blit(this.tileImages[tile], new $gamejs.Rect([i * this.TILE_SIZE[0], j * this.TILE_SIZE[1]]));
+					surface.blit(this.spriteSheet.get(i), new $gamejs.Rect([i * this.TILE_SIZE[0], j * this.TILE_SIZE[1]]));
 				};
 			};
 		};

@@ -6,7 +6,8 @@ define(function() {
         },
         images: {
         	grass: '/images/grass.png',
-        	dirt: '/images/dirt.png'
+        	dirt: '/images/dirt.png',
+            sprites: '/images/overworld-sprites.png'
         }
     };
 });
