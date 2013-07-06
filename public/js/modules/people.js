@@ -1,6 +1,6 @@
 define(['underscore', 'gamejs', 'modules/globals', 'modules/mapobject'], function(_, $gamejs, $globals, $mapobj) {
 	var Person = function(map, pos, imageNum){
-		var num = imageNum || 0;
+		var num = imageNum || 16;
   		Person.superConstructor.apply(this, arguments);
 		this.moving = false;
 

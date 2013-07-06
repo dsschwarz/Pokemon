@@ -15,7 +15,7 @@ define(['gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modul
 		this.TILE_SIZE = [30,30];
 		this.playerPos = [0, 0];
 		this.spriteSheets = {
-			pokemon: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,96], [420,300]]),
+			pokemon: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,96], [420,600]]),
 			objects: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,0], [420,96]])
 		};
 
@@ -54,16 +54,14 @@ define(['gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modul
 			return obj;
 		};
 		this.addPerson = function(pos, num) {
-			var imageNum = num || 0;
-			var obj = new $people.Person(this, pos, imageNum);
+			var obj = new $people.Person(this, pos, num);
 			this.objects[pos[0]][pos[1]] = obj;
 			console.log(obj);
 			this.objectGroup.add(obj);
 			return obj;
 		};
 		this.addNPC = function(pos, num) {
-			var imageNum = num || 2;
-			var obj = new $people.NPC(this, pos, imageNum);
+			var obj = new $people.NPC(this, pos, num);
 			this.objects[pos[0]][pos[1]] = obj;
 			console.log(obj);
 			this.objectGroup.add(obj);
