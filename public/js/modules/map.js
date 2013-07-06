@@ -1,5 +1,5 @@
-define(['gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modules/mapobject'], 
-	function($gamejs, $globals, $maps, $anim, $mapobj) {
+define(['gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modules/mapobject', 'modules/people'], 
+	function($gamejs, $globals, $maps, $anim, $mapobj, $people) {
 
 	var Map = function() {
 		this.tiles = $maps[0]; // Two dimensional array of tiles
@@ -15,8 +15,12 @@ define(['gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modul
 		this.objectGroup = new $gamejs.sprite.Group();
 		this.TILE_SIZE = [30,30];
 		this.playerPos = [0, 0];
-		this.spriteSheet = $anim.SpriteSheet($globals.images.sprites, [20, 24], [[0,0], [80,100]]);
-		console.log(this.spriteSheet);
+		this.spriteSheets = {
+			trainers: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[0,0], [80,100]]),
+			objects: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,0], [420,100]])
+		};
+
+		console.log(this.spriteSheets);
 		this.tileImages = [$gamejs.transform.scale($gamejs.image.load($globals.images.grass), this.TILE_SIZE),
 							$gamejs.transform.scale($gamejs.image.load($globals.images.dirt), this.TILE_SIZE)];
 		this.update = function(msDuration) {
@@ -44,8 +48,15 @@ define(['gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modul
 			};
 		};
 
-		this.addObject = function(pos) {
-			var obj = new $mapobj.MapObject(this, pos);
+		this.addObject = function(pos, imageNum) {
+			var obj = new $mapobj.MapObject(this, pos, imageNum);
+			this.objects[pos[0]][pos[1]] = obj;
+			console.log(obj);
+			this.objectGroup.add(obj);
+			return obj;
+		};
+		this.addPerson = function(pos) {
+			var obj = new $people.Person(this, pos);
 			this.objects[pos[0]][pos[1]] = obj;
 			console.log(obj);
 			this.objectGroup.add(obj);

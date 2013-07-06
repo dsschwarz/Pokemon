@@ -2,7 +2,13 @@ define(['underscore', 'gamejs', 'modules/globals', 'modules/map', 'modules/anima
     return function() {
         var display = $gamejs.display.setMode($globals.game.screenSize);
         var map = $map.Map();
-        var player = map.addObject([2,3]);
+        var player = map.addPerson([2,3]);
+        map.addObject([3,2], 2)
+        map.addObject([5,4], 2)
+        map.addObject([2,2], 2)
+        map.addObject([3,0], 1)
+        map.addObject([4,4], 1)
+        map.addObject([1,1], 1)
         var tick = function(msDuration) {
 
             _.each($gamejs.event.get(), function(event) {
