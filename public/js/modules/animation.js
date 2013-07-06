@@ -11,13 +11,12 @@ var SpriteSheet = function(imagePath, imageDim, bounds) {
   var surfaceCache = [];
   var imgSize = new $gamejs.Rect([0,0],[width,height]);
   // extract the single images from big spritesheet image
-  for (var i = begin[0]; i < end[0]; i += width) {
-     for (var j = begin[1]; j < end[1]; j += height) {
-       var surface = new $gamejs.Surface([width, height]);
-       var rect = new $gamejs.Rect(i, j, width, height);
-       console.log(rect)
-       surface.blit(image, imgSize, rect);
-       surfaceCache.push(surface);
+  for (var j = begin[1]; j < end[1]; j += height) {
+    for (var i = begin[0]; i < end[0]; i += width) {
+      var surface = new $gamejs.Surface([width, height]);
+      var rect = new $gamejs.Rect(i, j, width, height);
+      surface.blit(image, imgSize, rect);
+      surfaceCache.push(surface);
     }
   }
   return this;
