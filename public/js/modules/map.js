@@ -15,8 +15,8 @@ define(['gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modul
 		this.TILE_SIZE = [30,30];
 		this.playerPos = [0, 0];
 		this.spriteSheets = {
-			trainers: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[0,0], [80,100]]),
-			objects: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,0], [420,100]])
+			pokemon: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,96], [420,300]]),
+			objects: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,0], [420,96]])
 		};
 
 		console.log(this.spriteSheets);

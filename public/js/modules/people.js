@@ -7,10 +7,10 @@ define(['underscore', 'gamejs', 'modules/globals', 'modules/mapobject'], functio
 
 		this.move_delay = 0;
 		console.log(num)
-		this.images = {up: map.spriteSheets.trainers.get(1 + num*4),
-					   down: map.spriteSheets.trainers.get(0 + num*4),
-					   left: map.spriteSheets.trainers.get(2 + num*4),
-					   right: map.spriteSheets.trainers.get(3 + num*4)
+		this.images = {up: map.spriteSheets.pokemon.get(1 + num*4),
+					   down: map.spriteSheets.pokemon.get(0 + num*4),
+					   left: map.spriteSheets.pokemon.get(2 + num*4),
+					   right: map.spriteSheets.pokemon.get(3 + num*4)
 					}
 		this.image = this.images.down;
 	}
