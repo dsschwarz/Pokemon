@@ -11,7 +11,6 @@ define(['gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modul
 			};
 			this.objects.push(temp);
 		};
-		console.log(this.tiles)
 		this.objectGroup = new $gamejs.sprite.Group();
 		this.TILE_SIZE = [30,30];
 		this.playerPos = [0, 0];
@@ -30,11 +29,10 @@ define(['gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modul
 			var screenSize = $globals.game.screenSize;
 			var width = Math.floor(screenSize[0]/this.TILE_SIZE[0]);
 			var height = Math.floor(screenSize[1]/this.TILE_SIZE[1]);
-			var range = [[Math.max(this.playerPos[0] - Math.floor(width/2), 0),
-							Math.max(this.playerPos[1] - Math.floor(height/2), 0)], 
-						 [Math.min(this.playerPos[0] + Math.ceil(width/2), this.tiles.length), 
-						 	Math.min(this.playerPos[1] + Math.ceil(height/2), this.tiles[0].length)]];
-
+			var range = [[Math.max(this.playerPos[0] - Math.floor(height/2), 0),
+							Math.max(this.playerPos[1] - Math.floor(width/2), 0)], 
+						 [Math.min(this.playerPos[0] + Math.ceil(height/2), this.tiles.length), 
+						 	Math.min(this.playerPos[1] + Math.ceil(width/2), this.tiles[0].length)]];
 			// Range - rows and columns to be drawn
 			for (var i = range[1][0] - 1; i >= range[0][0]; i--) {
 				for (var j = range[1][1] - 1; j >= range[0][1]; j--) {
@@ -55,8 +53,17 @@ define(['gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modul
 			this.objectGroup.add(obj);
 			return obj;
 		};
-		this.addPerson = function(pos) {
-			var obj = new $people.Person(this, pos);
+		this.addPerson = function(pos, num) {
+			var imageNum = num || 0;
+			var obj = new $people.Person(this, pos, imageNum);
+			this.objects[pos[0]][pos[1]] = obj;
+			console.log(obj);
+			this.objectGroup.add(obj);
+			return obj;
+		};
+		this.addNPC = function(pos, num) {
+			var imageNum = num || 2;
+			var obj = new $people.NPC(this, pos, imageNum);
 			this.objects[pos[0]][pos[1]] = obj;
 			console.log(obj);
 			this.objectGroup.add(obj);
@@ -65,7 +72,7 @@ define(['gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modul
 
 		this.checkSpace = function(pos) {
 			var open = true;
-			if (pos[1] > this.objects.length + 1) {
+			if (pos[1] > this.objects[0].length + 1) {
 				open = false;
 			} else {
 				try {
