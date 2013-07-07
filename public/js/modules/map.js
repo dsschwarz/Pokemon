@@ -1,7 +1,60 @@
-define(['gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modules/mapobject', 'modules/people'], 
-	function($gamejs, $globals, $maps, $anim, $mapobj, $people) {
+define(['underscore','gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modules/mapobject', 'modules/people'], 
+	function(_, $gamejs, $globals, $maps, $anim, $mapobj, $people) {
 
-	var Map = function() {
+		var Director = function() {
+			this.onAir = false;
+			this.activeScene = null;
+			this.sceneStack = [];
+
+			this.update = function(msDuration) {
+				if (!this.onAir) return;
+
+				if (this.activeScene.update) {
+					this.activeScene.update(msDuration);
+				}
+			}
+
+			this.draw = function(display) {
+				if (this.activeScene.draw) {
+					this.activeScene.draw(display);
+				}
+			};
+
+			this.handleEvent = function(event) {
+				if (this.activeScene.handleEvent) {
+					this.activeScene.handleEvent(event);
+				}
+			};
+
+			this.start = function(scene) {
+				this.onAir = true;
+				this.replaceScene(scene);
+				return;
+			};
+
+			this.replaceScene = function(scene) {
+				this.activeScene = scene;
+			};
+			this.push = function(scene) {
+				this.sceneStack.push(scene);
+				this.activeScene = scene;
+			};
+			this.pop = function() {
+				this.sceneStack.pop();
+				if (sceneStack.length > 1) {
+					this.activeScene = this.sceneStack[this.sceneStack.length - 1];
+				} else {
+					this.activeScene = null;
+					this.onAir = false;
+				}
+			}
+
+			this.getScene = function() {
+				return this.activeScene;
+			};
+			return this;
+		};
+	var MapScene = function() {
 		this.tiles = $maps[0]; // Two dimensional array of tiles
 		this.objects = []; //2D array of objects
 		for (var i = this.tiles.length - 1; i >= 0; i--) {
@@ -86,6 +139,7 @@ define(['gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modul
 
 		return this;
 	};
+
 	
-	return {Map: Map};
+	return {MapScene: MapScene};
 });
