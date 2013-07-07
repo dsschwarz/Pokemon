@@ -6,7 +6,6 @@ define(['underscore', 'gamejs', 'modules/globals', 'modules/mapobject'], functio
 
 
 		this.move_delay = 0;
-		console.log(num)
 		this.images = {up: map.spriteSheets.pokemon.get(1 + num*4),
 					   down: map.spriteSheets.pokemon.get(0 + num*4),
 					   left: map.spriteSheets.pokemon.get(2 + num*4),
@@ -19,7 +18,9 @@ define(['underscore', 'gamejs', 'modules/globals', 'modules/mapobject'], functio
     
 	Person.prototype.handle = function(event) {
     	var $e = $gamejs.event;
+
     	if(event.type === $e.KEY_DOWN) {
+    		console.log(event.key);
 			if (event.key == $e.K_w) {
 				this.moving = 'up';
 				this.image = this.images.up;
@@ -58,45 +59,53 @@ define(['underscore', 'gamejs', 'modules/globals', 'modules/mapobject'], functio
     Person.prototype.update = function(msDuration) {
 		if ((this.moving) && (this.move_delay <= 0)) {
 			this.move();
-			this.move_delay = 500;
+			this.move_delay = 200;
 		};
-		this.move_delay -= msDuration;
+		if (this.move_delay > 0) {
+			this.move_delay -= msDuration;
+		};
 
     };
 
     
 
-	Person.prototype.move = function() {
-		var pos = this.pos;
-      if (this.moving === "left") {
-      	var check = this.map.checkSpace([pos[0], pos[1] - 1]);
-      	if(check.open) {
-      		this.map.objects[this.pos[0]][this.pos[1]] = 0;
-      		this.pos[1] -= 1;
-      		this.map.objects[this.pos[0]][this.pos[1]] = this;
-      	};
-      } else if(this.moving === "right") {
-      	var check = this.map.checkSpace([pos[0], pos[1] + 1]);
-      	if(check.open) {
-      		this.map.objects[this.pos[0]][this.pos[1]] = 0;
-      		this.pos[1] += 1;
-      		this.map.objects[this.pos[0]][this.pos[1]] = this;
-      	};
-      } else if(this.moving === "down") {
-      	var check = this.map.checkSpace([pos[0] + 1, pos[1]]);
-      	if(check.open) {
-      		this.map.objects[this.pos[0]][this.pos[1]] = 0;
-      		this.pos[0] += 1;
-      		this.map.objects[this.pos[0]][this.pos[1]] = this;
-      	};
-      } else if(this.moving === "up") {
-      	var check = this.map.checkSpace([pos[0] - 1, pos[1]]);
-      	if(check.open) {
-      		this.map.objects[this.pos[0]][this.pos[1]] = 0;
-      		this.pos[0] -= 1;
-      		this.map.objects[this.pos[0]][this.pos[1]] = this;
-      	};
-      };
+    Person.prototype.move = function() {
+    	var pos = this.pos;
+    	var check = {};
+    	if (this.moving === "left") {
+    		check = this.map.checkSpace([pos[0], pos[1] - 1]);
+    		if(check.open) {
+    			this.map.objects[this.pos[0]][this.pos[1]] = 0;
+    			this.pos[1] -= 1;
+    			this.map.objects[this.pos[0]][this.pos[1]] = this;
+    		};
+    	} else if(this.moving === "right") {
+    		check = this.map.checkSpace([pos[0], pos[1] + 1]);
+    		if(check.open) {
+    			this.map.objects[this.pos[0]][this.pos[1]] = 0;
+    			this.pos[1] += 1;
+    			this.map.objects[this.pos[0]][this.pos[1]] = this;
+    		};
+    	} else if(this.moving === "down") {
+    		check = this.map.checkSpace([pos[0] + 1, pos[1]]);
+    		if(check.open) {
+    			this.map.objects[this.pos[0]][this.pos[1]] = 0;
+    			this.pos[0] += 1;
+    			this.map.objects[this.pos[0]][this.pos[1]] = this;
+    		};
+    	} else if(this.moving === "up") {
+    		check = this.map.checkSpace([pos[0] - 1, pos[1]]);
+    		if(check.open) {
+    			this.map.objects[this.pos[0]][this.pos[1]] = 0;
+    			this.pos[0] -= 1;
+    			this.map.objects[this.pos[0]][this.pos[1]] = this;
+    		};
+    	};
+  		if (check.edge) {
+  			this.map.changeMap(this.moving);
+  			this.moving = false;
+  			console.log("Changing Map")
+  		}
     };
     var NonPlayableChar = function(map, pos, imageNum, moveCycle) {
   		NonPlayableChar.superConstructor.apply(this, arguments);

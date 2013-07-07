@@ -4,7 +4,7 @@
  * and a reference to the map
  */
 
-define(['underscore', 'gamejs', 'globals'], function(_, $gamejs, $globals) {
+define(['underscore', 'gamejs', 'modules/globals'], function(_, $gamejs, $globals) {
 
     
     var Pokemon = function(map){
