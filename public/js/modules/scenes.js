@@ -66,6 +66,29 @@ define(['underscore','gamejs', 'modules/globals', 'modules/maps', 'modules/anima
 		};
 		return this;
 	};
+	var StartScene = function(director) {
+		this.director = director;
+		this.draw = function(surface) {
+			surface.fill('#eee')
+			var font = new $gamejs.font.Font('20px monospace');
+			surface.blit(font.render("Press any key to begin"), [40, 40]);
+		};
+		this.handle = function(event) {
+			if(event.type === $gamejs.event.KEY_DOWN) {
+		        var map = new MapScene(this.director);
+		        map.player = map.addPerson([2,3]);
+		        map.addObject([3,2], 2)
+		        map.addObject([5,4], 2)
+		        map.addObject([2,2], 2)
+		        map.addObject([3,0], 1)
+		        map.addObject([4,4], 1)
+		        map.addObject([1,1], 1)
+		        map.addNPC([3,3], 4)
+		        map.addNPC([0,5], 2)
+		        this.director.replaceScene(map);
+			}
+		}
+	}
 
 
 	var MapScene = function(director) {
@@ -103,11 +126,7 @@ define(['underscore','gamejs', 'modules/globals', 'modules/maps', 'modules/anima
 						 [Math.min(this.playerPos[0] + Math.ceil(height/2), this.tiles.length), 
 						 	Math.min(this.playerPos[1] + Math.ceil(width/2), this.tiles[0].length)]];
 			// Range - rows and columns to be drawn
-			if (this.player.moving === "right") {
-				console.info(range[0])
-				console.info(range[1])
-				console.info("Height: " + height + " , Width: " + width);
-			}
+			
 			for (var i = range[1][0] - 1; i >= range[0][0]; i--) {
 				for (var j = range[1][1] - 1; j >= range[0][1]; j--) {
 					var tile = this.tiles[i][j];
@@ -193,6 +212,7 @@ define(['underscore','gamejs', 'modules/globals', 'modules/maps', 'modules/anima
 
 	
 	return {
+		StartScene: StartScene,
 		MapScene: MapScene,
 		Director: Director
 	};
