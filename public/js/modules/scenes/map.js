@@ -41,13 +41,23 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
     [Math.min(this.playerPos[0] + Math.ceil(height/2), this.tiles.length), 
     Math.min(this.playerPos[1] + Math.ceil(width/2), this.tiles[0].length)]];
       // Range - rows and columns to be drawn
-      
+    var offset = [];
+    if (range[0][1] > 0) {
+      offset[0] = range[0][1];
+    } else {
+      offset[0] = this.playerPos[1] - width/2;
+    }
+    if (range[0][0] > 0) {
+      offset[1] = range[0][0];
+    } else {
+      offset[1] = this.playerPos[0] - height/2;
+    }
     for (var i = range[1][0] - 1; i >= range[0][0]; i--) {
       for (var j = range[1][1] - 1; j >= range[0][1]; j--) {
         var tile = this.tiles[i][j];
         var object = this.objects[i][j];
-        var draw_pos = [(j - range[0][1]) * this.TILE_SIZE[1], 
-        (i - range[0][0]) * this.TILE_SIZE[0]];
+        var draw_pos = [(j - offset[0]) * this.TILE_SIZE[1], 
+        (i - offset[1]) * this.TILE_SIZE[0]];
         surface.blit(this.tileImages[tile], new $gamejs.Rect(draw_pos));
         if (object != 0) {
           surface.blit(object.image, new $gamejs.Rect(draw_pos));
@@ -78,8 +88,8 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
     this.objectGroup.add(obj);
     return obj;
   };
-  MapScene.prototype.addNPC = function(pos, num) {
-    var obj = new $people.NPC(this, pos, num);
+  MapScene.prototype.addNPC = function(pos, num, moveCycle) {
+    var obj = new $people.NPC(this, pos, num, moveCycle);
     this.objects[pos[0]][pos[1]] = obj;
     console.log(obj);
     this.objectGroup.add(obj);
@@ -104,7 +114,15 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
     };
   };
   MapScene.prototype.changeMap = function(dir) {
-    if (dir === "right") {
+    // Changes scene to "Loading new map"
+    // contacts server requesting new map
+    // pushes new map, or goes back to old if there was an error/no need to change map
+    // 
+    // this.director.push(new TransitionScene);
+    console.log("Awaiting map change");
+
+
+    /*if (dir === "right") {
       var map = new MapScene(this.director);
       map.player = map.addPerson([this.playerPos[0], 0])
       this.director.push(map);
@@ -120,7 +138,7 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
       var map = new MapScene(this.director);
       map.player = map.addPerson([0, this.playerPos[1]])
       this.director.push(map);
-    }
+    }*/
   };
 
   return {

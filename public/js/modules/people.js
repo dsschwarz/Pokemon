@@ -99,7 +99,7 @@ define(['underscore', 'gamejs', 'modules/globals', 'modules/mapobject'], functio
     			this.map.objects[this.pos[0]][this.pos[1]] = this;
     		};
     	};
-  		if (check.edge) {
+  		if ((check.edge) && (this === this.map.player)) {
   			this.map.changeMap(this.moving);
   			this.moving = false;
   			console.log("Changing Map")
@@ -109,14 +109,14 @@ define(['underscore', 'gamejs', 'modules/globals', 'modules/mapobject'], functio
   		NonPlayableChar.superConstructor.apply(this, arguments);
   		this.currentMove = 0;
   		this.moveTimer = 0;
-  		if (!moveCycle) {
+  		if ((!moveCycle) || !(moveCycle instanceof Array)) {
 	  		this.moveCycle = [{dir: "right", spaces: 4},
 	  						   {dir: "left", spaces: 4}];
-		} else {
-			this.moveCycle = moveCycle;
-		}
+  		} else {
+  			this.moveCycle = moveCycle;
+  		}
 
-		return this;
+  		return this;
 
     }
     $gamejs.utils.objects.extend(NonPlayableChar, Person);

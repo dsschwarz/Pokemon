@@ -10,7 +10,7 @@ require.config({
         globals     : 'modules/map',
     }
 });
-
+var socket = io.connect('http://localhost:1337');
 require(['jquery', 'gamejs', 'modules/main', 'modules/globals'], function($, gamejs, main, $globals) {
     // game init
     for (var image in $globals.images){

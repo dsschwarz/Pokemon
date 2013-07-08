@@ -8,10 +8,15 @@ var express = require('express')
   , user = require('./routes/user')
   , http = require('http')
   , path = require('path')
-  , engine = require('ejs-locals');
+  , engine = require('ejs-locals')
+  , app = express()
+  , server = require('http').createServer(app)
+  , fs = require('fs');
 
 
-var app = express();
+
+var io = require('socket.io').listen(server);
+io.set('log level', 0);
 
 // all environments
 app.engine = ('ejs', engine);
@@ -33,6 +38,9 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+io.on('connection', function(socket) {
+	console.log("A user connected");
 });
+
+server.listen(1337);
+

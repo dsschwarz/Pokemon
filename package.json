@@ -9,7 +9,9 @@
     "express": "3.2.6",
     "ejs": "0.8.3",
     "cron": "1.0.0",
-    "ejs-locals": "~1.0.2"
+    "ejs-locals": "~1.0.2",
+    "amd-loader": "0.0.4",
+    "socket.io": "~0.9.16"
   },
   "engines": {
     "node": "0.10.x",
