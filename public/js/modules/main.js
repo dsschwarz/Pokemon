@@ -1,9 +1,9 @@
-define(['underscore', 'gamejs', 'modules/globals', 'modules/scenes', 'modules/animation'], function(_, $gamejs, $globals, $scenes, $anim) {
+define(['underscore', 'gamejs', 'modules/globals', 'modules/scenes/director', 'modules/animation', 'modules/scenes/start'], function(_, $gamejs, $globals, $director, $anim, $start) {
     return function() {
         var display = $gamejs.display.setMode($globals.game.screenSize);
-        var director = new $scenes.Director();
+        var director = new $director.Director();
 
-        director.start(new $scenes.StartScene(director));
+        director.start(new $start.StartScene(director));
         var tick = function(msDuration) {
 
             _.each($gamejs.event.get(), function(event) {
@@ -11,6 +11,7 @@ define(['underscore', 'gamejs', 'modules/globals', 'modules/scenes', 'modules/an
                 director.handle(event);
                 // console.warn(event);
             });
+            
             director.update(msDuration);
             director.draw(display);
             // console.warn(msDuration);

@@ -18,8 +18,9 @@ var SpriteSheet = function(imagePath, imageDim, bounds) {
       surface.blit(image, imgSize, rect);
       surfaceCache.push(surface);
     }
+    return this;
+  };
+  return {
+    SpriteSheet: SpriteSheet
   }
-  return this;
-};
-return {SpriteSheet: SpriteSheet}
 });
