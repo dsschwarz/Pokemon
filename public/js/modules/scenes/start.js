@@ -18,8 +18,8 @@ define(['underscore','gamejs', 'modules/scenes/map'],
             map.addObject([3,0], 1);
             map.addObject([4,4], 1);
             map.addObject([1,1], 1);
-            map.addNPC([3,3], 4);
-            map.addNPC([0,5], 2);
+            map.addNPC([3,3]);
+            map.addNPC([0,5]);
             this.director.replaceScene(map);
         }
       }
