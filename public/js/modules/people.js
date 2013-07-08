@@ -20,7 +20,6 @@ define(['underscore', 'gamejs', 'modules/globals', 'modules/mapobject'], functio
     	var $e = $gamejs.event;
 
     	if(event.type === $e.KEY_DOWN) {
-    		console.log(event.key);
 			if (event.key == $e.K_w) {
 				this.moving = 'up';
 				this.image = this.images.up;

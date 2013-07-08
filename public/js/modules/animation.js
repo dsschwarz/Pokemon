@@ -1,4 +1,4 @@
-define(['gamejs', 'modules/globals', 'modules/maps'], function($gamejs, $globals, $maps) {
+define(['gamejs', 'modules/globals'], function($gamejs, $globals) {
 var SpriteSheet = function(imagePath, imageDim, bounds) {
   this.get = function(id) {
     return surfaceCache[id];

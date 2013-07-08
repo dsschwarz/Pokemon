@@ -1,4 +1,5 @@
 define(function() {
+    console.log(window.innerWidth-20)
     return {
         game: {
             fps: 36,

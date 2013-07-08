@@ -1,11 +1,11 @@
-define(['underscore','gamejs', 'modules/globals', 'modules/maps', 'modules/animation', 'modules/mapobject', 'modules/people'], 
-	function(_, $gamejs, $globals, $maps, $anim, $mapobj, $people) {
+define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/animation', 'modules/mapobject', 'modules/people'], 
+	function(_, $gamejs, $globals, $mapinfo, $anim, $mapobj, $people) {
 
 	var Director = function() {
 		this.onAir = false;
 		this.activeScene = null;
 		this.sceneStack = [];
-
+		console.log(window.innerWidth -20);
 		this.update = function(msDuration) {
 			if (!this.onAir) return;
 
@@ -92,7 +92,7 @@ define(['underscore','gamejs', 'modules/globals', 'modules/maps', 'modules/anima
 
 
 	var MapScene = function(director) {
-		this.tiles = $maps[1]; // Two dimensional array of tiles
+		this.tiles = $mapinfo.maps[1]; // Two dimensional array of tiles
 		this.objects = []; //2D array of objects
 		for (var i = this.tiles.length - 1; i >= 0; i--) {
 			var temp = [];
@@ -111,7 +111,8 @@ define(['underscore','gamejs', 'modules/globals', 'modules/maps', 'modules/anima
 			objects: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,0], [420,96]])
 		};
 		this.tileImages = [$gamejs.transform.scale($gamejs.image.load($globals.images.grass), this.TILE_SIZE),
-							$gamejs.transform.scale($gamejs.image.load($globals.images.dirt), this.TILE_SIZE)];
+						   $gamejs.transform.scale($gamejs.image.load($globals.images.dirt), this.TILE_SIZE)];
+		console.log(this.tileImages[0].getSize())
 		this.update = function(msDuration) {
 			this.objectGroup.update(msDuration);
 			this.playerPos = this.player.pos;
