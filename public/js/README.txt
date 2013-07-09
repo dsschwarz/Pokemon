@@ -20,4 +20,26 @@ mapobject: Stationary overworld object
 
 map data is pulled from server. Mapinfo will be deprecated soon
 
+Battles
+Battle objects are contained in battle folder
+Battle scene: 
+	Pointer to player
+	Pointer to enemy
+	Tile array
+	Object Array - updates on tick
+	Pointer to director
+	Pointer to socket - sends data only on keypress
 
+Three attack "objects"
+player/enemy  .attackMode = String
+If attackMode, cannot launch other attacks. Player is moved according to attack pattern
+i.e. if (player.attackMode === "tackle") player.moveRight(3 spaces);
+
+Player can attach attackObjects, which occupy a space on the grid, and have their own update behavior
+This will be the majority of attacks.
+
+Player can initiate attackEvents, which have their own update behavior. They can cause effects, dmg over time, or spawn new objects
+i.e. Rock fall will cause attackObject rocks to fall onto opponents side
+
+Player has an object containing effects applied to them - roots, stuns, slows, debuffs, etc
+These count down per tick, and are removed when none are left

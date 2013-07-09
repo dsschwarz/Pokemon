@@ -11,6 +11,7 @@ var express = require('express')
   , engine = require('ejs-locals')
   , app = express()
   , server = require('http').createServer(app)
+  , game = require('./server/js/main')
   , fs = require('fs');
 
 
