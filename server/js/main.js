@@ -1,7 +1,12 @@
 var $maps = require("./maps")
-var $map = require("./map")
+  , $map = require("./map")
+  , $g = require("./globals");
 
-var mapTimeout = setTimeout(function() {
-	var map = new $map.Map([0, 0]);
-	console.log(map);
-}, 1000)
+for (var i = $maps.MAP_HEIGHT - 1; i >= 0; i--) {
+	var row = [];
+	for (var j = $maps.MAP_WIDTH - 1; j >= 0; j--) {
+		row.push(new $map.Map([i, j]));
+	}
+	$g.maps.push(row);
+};
+console.log($g.maps)

@@ -6,6 +6,7 @@
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
+  , map = require('./routes/map')
   , http = require('http')
   , path = require('path')
   , engine = require('ejs-locals')
@@ -38,7 +39,8 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/users', user.list);
-
+app.get('/mapedit', map.mapedit)
+app.get('/load', map.load)
 io.on('connection', function(socket) {
 	console.log("A user connected");
 });

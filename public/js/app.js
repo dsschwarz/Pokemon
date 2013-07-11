@@ -6,8 +6,6 @@ require.config({
         gamejs      : 'lib/gamejs/gamejs',
         main        : 'modules/main',
         globals     : 'modules/globals',
-        globals     : 'modules/animation',
-        globals     : 'modules/map',
     }
 });
 var socket = io.connect('http://localhost:1337');
