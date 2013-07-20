@@ -10,24 +10,128 @@ require.config({
 });
 define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'], 
   function($gamejs, $anim, $mapobj, $globals) {
+  
+    // Preload Images
   for (var image in $globals.images){
       $gamejs.preload([$globals.images[image]]);
       console.log($globals.images[image]);
   }
-
+  var panReady = false;
+  var panning = false;
+  var prevMousePos = [0, 0];
+  var offset = [0, 0]; // Can be changed by editor (pan)
+  var map = {};
+  var maps = [];
   $gamejs.ready(function(){
-    var display = $gamejs.display.setMode($globals.game.screenSize);
+    var canvas  =$("#gjs-canvas");
+    var display = $gamejs.display.setMode([600, 600]);
+    var tileType = 1;
+    var tileSelect = $(".tiles-select");
+    for (var i = tileSelect.length - 1; i >= 0; i--) {
+      tileSelect[i].onclick = function(event){
+        tileType = event.target.value;
+        console.log(tileType);
+      }
+    };
     $.ajax({
       type: "GET",
       url: "/load"
     }).done(function( data ) {
       console.log(data);
-
-      var map = new Map(data.maps[0][0].tiles, data.maps[0][0].objects);
+      
+      for (var i = data.maps.length - 1; i >= 0; i--) {
+        $("#map-row").prepend("<option value='" + i + "''>" + i + "</option>");
+        var row = [];
+        for (var j = data.maps[i].length - 1; j >= 0; j--) {
+          row.push(new Map(data.maps[i][j].tiles, data.maps[i][j].objects));
+        };
+        maps.push(row);
+      };
+      for (var i = data.maps[0].length - 1; i >= 0; i--) {
+        $("#map-column").prepend("<option value='" + i + "''>" + i + "</option>")
+      };
+      map = maps[0][0];
       map.draw(display);
+      var getMap = function(event) {
+        map = maps[$("#map-row").val()][$("#map-column").val()];
+        console.log(map.tiles);
+        map.draw(display);
+      };
+      $("#map-row").change(getMap);
+      $("#map-column").change(getMap);
+      $("#addRowButton").click(addRow);
+      $("#addColumnButton").click(addCol);
+      $("#saveButton").click(function(event) {
+
+      })
+      canvas.mouseup(onMouseUp);
+      canvas.mousedown(onMouseDown);
+      canvas.mousemove(onMouseMove);
     });
+    var onMouseDown = function(event) {
+      if (panReady) {
+        prevMousePos = [event.pageX, event.pageY];
+        panning = true;
+      } else {
+        var canvasOffset = canvas.offset();
+        tilePos = getTile([event.pageX - canvasOffset.left, event.pageY - canvasOffset.top]);
+        map.tiles[tilePos[0]][tilePos[1]] = tileType;
+        map.draw(display);
+      }
+    }
+    var onMouseUp = function(event) {
+      console.log("mouseup")
+      if(panning) {
+        offset[0] += Math.floor((event.pageX - prevMousePos[0])/map.TILE_SIZE[0]);
+        offset[1] += Math.floor((event.pageY - prevMousePos[1])/map.TILE_SIZE[1]);
+        panning = false;
+      }
+      map.draw(display);
+    }
+    var onMouseMove = function(event) {
+      if(panning) {
+        offset[0] += Math.round((event.pageX - prevMousePos[0])/map.TILE_SIZE[0]);
+        offset[1] += Math.round((event.pageY - prevMousePos[1])/map.TILE_SIZE[1]);
+        prevMousePos = [event.pageX, event.pageY];
+      }
+      map.draw(display);
+    }
+    var getTile = function(pos) {
+      // Converts pos (x, y) to tile position (row, column)
+      var tilePos = [Math.floor(pos[1] / map.TILE_SIZE[1]) + offset[1], Math.floor(pos[0] / map.TILE_SIZE[0]) + offset[0]]
+      console.log(tilePos);
+      return(tilePos);
+    }
+    var addRow = function() {
+      var row = [];
+      for (var i = map.tiles[0].length - 1; i >= 0; i--) {
+        row.push(0);
+      };
+      map.tiles.push(row);
+      map.objects.push(row);
+      map.draw(display);
+    };
+    var addCol = function() {
+      for (var i = map.tiles.length - 1; i >= 0; i--) {
+        map.tiles[i].push(0);
+        map.objects[i].push(0);
+      };
+      map.draw(display);
+    }
+    var onKeyDown = function(ev) {
+      if (ev.keyCode === 32)
+        panReady = true;
+    }
+    var onKeyUp = function(ev) {
+      if (ev.keyCode === 32)
+        panReady = false;
+    }
+    document.addEventListener('keydown', onKeyDown, false);
+    document.addEventListener('keyup', onKeyUp, false);
   });
 
+
+  
 
 
 
@@ -53,12 +157,11 @@ define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'],
   };
 
   Map.prototype.draw = function(surface){
-    surface.fill('#fff')
-    var screenSize = $globals.game.screenSize;
+    surface.fill('#ddd')
+    var screenSize = [600, 600];
     var width = Math.floor(screenSize[0]/this.TILE_SIZE[0]);
     var height = Math.floor(screenSize[1]/this.TILE_SIZE[1]);
     
-    var offset = [0, 0]; // Can be changed by editor (pan)
     for (var i = this.tiles.length - 1; i >= 0; i--) {
       for (var j = this.tiles[0].length - 1; j >= 0; j--) {
         var tile = this.tiles[i][j];

@@ -1,6 +1,6 @@
 var fs = require('fs');
-exports.MAP_WIDTH = 1;
-exports.MAP_HEIGHT = 1;
+exports.MAP_WIDTH = 2;
+exports.MAP_HEIGHT = 2;
 var readMap = function(filePath, callback) {
 	var tiles= [];
 	var data = fs.readFileSync(filePath, 'utf8');
