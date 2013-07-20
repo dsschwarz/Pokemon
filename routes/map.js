@@ -8,11 +8,13 @@ exports.load = function(req, res) {
 		var row =[];
 		mapRow.forEach(function(map) {
 			var objs = [];
-			map.objects.forEach(function(obj) {
+			map.objectGroup.forEach(function(obj) {
 				objs.push({pos: obj.pos, imgNum: obj.imgNum})
+				console.log(obj.imgNum)
+				console.log(obj.pos)
 			})
 			row.push({tiles: map.tiles, objects: objs});
-			console.log(map);
+			console.log(objs);
 		})
 		data.maps.push(row);
 	})
@@ -22,5 +24,10 @@ exports.mapedit = function(req, res) {
 	res.render("mapeditor");
 };
 exports.save = function(req, res) {
-	console.log(req);
+	console.log(req.param("maps"))
+	req.param("maps").forEach(function(mapRow) {
+		console.log(mapRow);
+		console.log(mapRow[0].tiles)
+	})
+	res.send(true);
 };

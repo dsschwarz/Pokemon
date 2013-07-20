@@ -44,6 +44,10 @@ define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'],
         var row = [];
         for (var j = data.maps[i].length - 1; j >= 0; j--) {
           row.push(new Map(data.maps[i][j].tiles, data.maps[i][j].objects));
+          console.log(data.maps[i][j].objects)
+          data.maps[i][j].objects.forEach(function(obj) {
+            row[row.length - 1].addObject(obj.pos, obj.imageNum);
+          });
         };
         maps.push(row);
       };
@@ -62,8 +66,27 @@ define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'],
       $("#addRowButton").click(addRow);
       $("#addColumnButton").click(addCol);
       $("#saveButton").click(function(event) {
-
-      })
+        dataMaps = [];
+        maps.forEach(function(mapRow) {
+          var row =[];
+          mapRow.forEach(function(mapObject) {
+            var objs = [];
+            mapObject.objectGroup.forEach(function(obj) {
+              objs.push({pos: obj.pos, imgNum: obj.imgNum})
+            })
+            row.push({tiles: map.tiles, objects: objs});
+          })
+          dataMaps.push(row);
+        });
+        console.log(dataMaps);
+        console.log(JSON.stringify(dataMaps));
+        $.ajax({
+          type: "GET",
+          url: "/save",
+          data: {maps: dataMaps}
+        }).done(function(){alert("Save Complete")});
+        
+      });
       canvas.mouseup(onMouseUp);
       canvas.mousedown(onMouseDown);
       canvas.mousemove(onMouseMove);
@@ -138,6 +161,7 @@ define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'],
   var Map = function(tiles, objects) {
     this.tiles = tiles;
     this.objects = []; //2D array of objects
+    this.objectGroup = new $gamejs.sprite.Group();
     for (var i = this.tiles.length - 1; i >= 0; i--) {
       var temp = [];
       for (var j = this.tiles[i].length - 1; j >= 0; j--) {
@@ -175,12 +199,19 @@ define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'],
       };
     };
   };
+  Map.prototype.addObject = function(pos, imageNum) {
+    console.log(this);
+    console.log(pos);
+    var obj = new $mapobj.MapObject(this, pos, imageNum);
+    this.objects[pos[0]][pos[1]] = obj;
+    console.log(obj);
+    this.objectGroup.add(obj);
+    return obj;
+  };
   Map.prototype.handle = function(event) {
     if (event.type === $gamejs.event.MOUSE_DOWN) {
       console.log("Change tile")
     }
   };
-  return {
-    Map: Map
-  }
+  return;
 });
