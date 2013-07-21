@@ -41,7 +41,7 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/mapedit', map.mapedit)
 app.get('/load', map.load)
-app.get('/save', map.save)
+app.post('/save', map.save)
 io.on('connection', function(socket) {
 	console.log("A user connected");
 });

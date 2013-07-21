@@ -9,4 +9,3 @@ for (var i = $maps.MAP_HEIGHT - 1; i >= 0; i--) {
 	}
 	$g.maps.push(row);
 };
-console.log($g.maps)
