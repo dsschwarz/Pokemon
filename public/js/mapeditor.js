@@ -39,10 +39,10 @@ define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'],
     }).done(function( data ) {
       console.log(data);
       
-      for (var i = data.maps.length - 1; i >= 0; i--) {
-        $("#map-row").prepend("<option value='" + i + "''>" + i + "</option>");
+      for (var i = 0; i < data.maps.length; i++) {
+        $("#map-row").append("<option value='" + i + "''>" + i + "</option>");
         var row = [];
-        for (var j = data.maps[i].length - 1; j >= 0; j--) {
+        for (var j = 0; j < data.maps[i].length; j++) {
           row.push(new Map(data.maps[i][j].tiles, data.maps[i][j].objects));
           console.log(data.maps[i][j].objects)
           data.maps[i][j].objects.forEach(function(obj) {

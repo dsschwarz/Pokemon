@@ -9,7 +9,11 @@ var readMap = function(filePath, callback) {
 	var object_data = data.slice(index, data.length).split("\n");
 	object_data = object_data.slice(1, object_data.length);
 	for (var i = object_data.length - 1; i >= 0; i--) {
-		object_data[i] = JSON.parse(object_data[i]);
+		try {
+			object_data[i] = JSON.parse(object_data[i]);
+		} catch(err) {
+			console.log( "ERR parsing map objects")
+		}
 	};
 	for (var i = tile_data.length - 1; i >= 0; i--) {
 		tile_data[i] = tile_data[i].split(" ");
@@ -40,6 +44,7 @@ for (var i = exports.MAP_HEIGHT - 1; i >= 0; i--) {
 		readMap("./server/maps/" + filePath, function(tiles, objects) {
 			map.tiles = tiles;
 			map.objects = objects;
+			console.log(map);
 		});
 		row.push(map);
 	}
