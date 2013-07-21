@@ -6,11 +6,13 @@
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
+  , map = require('./routes/map')
   , http = require('http')
   , path = require('path')
   , engine = require('ejs-locals')
   , app = express()
   , server = require('http').createServer(app)
+  , game = require('./server/js/main')
   , fs = require('fs');
 
 
@@ -37,7 +39,9 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/users', user.list);
-
+app.get('/mapedit', map.mapedit)
+app.get('/load', map.load)
+app.get('/save', map.save)
 io.on('connection', function(socket) {
 	console.log("A user connected");
 });

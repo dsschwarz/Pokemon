@@ -60,7 +60,7 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
         (i - offset[1]) * this.TILE_SIZE[0]];
         surface.blit(this.tileImages[tile], new $gamejs.Rect(draw_pos));
         if (object != 0) {
-          surface.blit(object.image, new $gamejs.Rect(draw_pos));
+          surface.blit(object.image, new $gamejs.Rect(draw_pos[0] + (this.TILE_SIZE[0] - object.image.getSize()[0])/2, draw_pos[1]));
         };
       };
     };
