@@ -12,7 +12,7 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
       this.objects.push(temp);
     };
     this.objectGroup = new $gamejs.sprite.Group();
-    this.TILE_SIZE = [30,30];
+    this.TILE_SIZE = [40,40];
     this.playerPos = [0, 0];
     // this.player = {} //player should be instantiated here, not in main.js
     this.director = director;
