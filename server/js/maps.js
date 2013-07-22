@@ -1,6 +1,9 @@
-var fs = require('fs');
 exports.MAP_WIDTH = 3;
 exports.MAP_HEIGHT = 3;
+var $map = require("./map")
+  , $gamejs = require("../lib/gamejs")
+  , fs = require("fs")
+  , $mapobj = require("./mapobject");
 var readMap = function(filePath, callback) {
 	var tiles= [];
 	var data = fs.readFileSync(filePath, 'utf8');

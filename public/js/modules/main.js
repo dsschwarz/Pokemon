@@ -1,4 +1,5 @@
-define(['underscore', 'gamejs', 'modules/globals', 'modules/scenes/director', 'modules/animation', 'modules/scenes/start'], function(_, $gamejs, $globals, $director, $anim, $start) {
+define(['underscore', 'gamejs', 'modules/globals', 'modules/scenes/director', 'modules/animation', 'modules/scenes/start', 'socket'], 
+    function(_, $gamejs, $globals, $director, $anim, $start, $socket) {
     return function() {
         var display = $gamejs.display.setMode($globals.game.screenSize);
         var director = new $director.Director();

@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -13,8 +12,7 @@ var express = require('express')
   , app = express()
   , server = require('http').createServer(app)
   , game = require('./server/js/main')
-  , fs = require('fs');
-
+  , $socket = require('./socket');
 
 
 var io = require('socket.io').listen(server);
@@ -42,9 +40,7 @@ app.get('/users', user.list);
 app.get('/mapedit', map.mapedit)
 app.get('/load', map.load)
 app.post('/save', map.save)
-io.on('connection', function(socket) {
-	console.log("A user connected");
-});
+io.on('connection', $socket.io);
 
 server.listen(1337);
 

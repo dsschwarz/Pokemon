@@ -99,6 +99,7 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
   MapScene.prototype.checkSpace = function(pos) {
     var open = true;
     var edge = false;
+    var object = false;
     if ((pos[1] > this.objects[0].length - 1) || (pos[1] < 0) || (pos[0] < 0) || (pos[0] > this.objects.length - 1)) {
       open = false;
       edge = true;
@@ -106,11 +107,13 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
     } else {
       if(this.objects[pos[0]][pos[1]] != 0) {
         open = false;
+        object = this.objects[pos[0]][pos[1]];
       }
     };
     return {
       open: open,
-      edge: edge
+      edge: edge,
+      object: object
     };
   };
   MapScene.prototype.changeMap = function(dir) {

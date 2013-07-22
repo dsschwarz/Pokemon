@@ -1,6 +1,7 @@
 var $maps = require("./maps")
   , $gamejs = require("../lib/gamejs")
   , $mapobj = require("./mapobject")
+  , $people = require("./people");
 var Map = function(mapPos) {
   this.mapPos = mapPos || [0, 0];
   var mapInfo = $maps.maps[mapPos[0]][mapPos[1]]; // Two dimensional array of tiles
@@ -25,7 +26,6 @@ var Map = function(mapPos) {
 
 Map.prototype.update = function(msDuration) {
   this.objectGroup.update(msDuration);
-  this.playerPos = this.player.pos;
 };
 Map.prototype.addObject = function(pos, imageNum) {
   var obj = new $mapobj.MapObject(this, pos, imageNum);
@@ -34,7 +34,7 @@ Map.prototype.addObject = function(pos, imageNum) {
   return obj;
 };
 Map.prototype.addPerson = function(pos, num) {
-  // var obj = new $people.Person(this, pos, num);
+  var obj = new $people.Person(this, pos, num);
   var obj = {};
   this.objects[pos[0]][pos[1]] = obj;
   this.objectGroup.add(obj);
