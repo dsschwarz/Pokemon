@@ -14,8 +14,6 @@ define(['underscore', 'gamejs', 'modules/globals'], function(_, $gamejs, $global
   	}
     $gamejs.utils.objects.extend(MapObject, $gamejs.sprite.Sprite);
 
-    
-
     return {
         MapObject: MapObject
     };

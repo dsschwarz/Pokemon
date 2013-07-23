@@ -1,6 +1,7 @@
 define(['underscore', 'gamejs', 'modules/globals', 'modules/scenes/director', 'modules/animation', 'modules/scenes/start'], function(_, $gamejs, $globals, $director, $anim, $start) {
     return function() {
-        var display = $gamejs.display.setMode($globals.game.screenSize);
+        var display = $gamejs.display.setMode($globals.game.screenSize, $gamejs.display.FULLSCREEN);
+
         var director = new $director.Director();
 
         director.start(new $start.StartScene(director));
