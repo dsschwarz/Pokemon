@@ -25,32 +25,34 @@ exports.mapedit = function(req, res) {
 	res.render("mapeditor");
 };
 exports.save = function(req, res) {
-	var reqMaps = req.param("maps");
-	console.log(reqMaps);
+	var reqMaps = req.param("maps")
 	for (var i = reqMaps.length - 1; i >= 0; i--) {
-		for (var j = reqMaps[i].length - 1; j >= 0; j--) {
-			var map = reqMaps[i][j];
-			var filePath = i + (j + ".txt");
-			if ((i < 10) && (j < 10)) {
-				filePath = "0" + i + "0" + j + ".txt";
-			} else if (i < 10) {
-				filePath = "0" + i + j + ".txt";
-			} else if (j < 10) {
-				filePath = i + "0" + j + ".txt";
-			}
+		console.log(i);
+		var map = reqMaps[i];
+		var filePath = map.pos[0] + (map.pos[1] + ".txt");
+		if ((map.pos[0] < 10) && (map.pos[1] < 10)) {
+			filePath = "0" + map.pos[0] + "0" + map.pos[1] + ".txt";
+		} else if (map.pos[0] < 10) {
+			filePath = "0" + map.pos[0] + map.pos[1] + ".txt";
+		} else if (map.pos[1] < 10) {
+			filePath = map.pos[0] + "0" + map.pos[1] + ".txt";
+		}
 
-			var ws = fs.createWriteStream("./server/maps/" + filePath);
+		var ws = fs.createWriteStream("./server/maps/" + filePath);
 
-			for (var ii = 0; ii < map.tiles.length; ii++) {
-				for (var jj = 0; jj < map.tiles[ii].length; jj++) {
-					ws.write(map.tiles[ii][jj]);
-					if (jj != map.tiles[jj].length)
-						ws.write(" ");
-				};
-				if (ii != map.tiles.length)
-					ws.write("\n");
+		for (var ii = 0; ii < map.tiles.length; ii++) {
+			for (var jj = 0; jj < map.tiles[ii].length; jj++) {
+				ws.write(map.tiles[ii][jj]);
+				if (jj != map.tiles[ii].length - 1)
+					ws.write(" ");
 			};
-			console.log(map);
+			ws.write("\n");
+		};
+		ws.write("OBJECTS")
+		if (map.objects)
+		for (var i = map.objects.length - 1; i >= 0; i--) {
+			ws.write("\n");
+			ws.write(JSON.stringify(map.objects[i]));
 		};
 	};
 	res.send(true);
