@@ -20,7 +20,8 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
     this.director = director;
 
     this.spriteSheets = {
-      pokemon: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,96], [420,600]]),
+      // pokemon: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,96], [420,600]]),
+      pokemon: new $anim.SpriteSheet($globals.images.genOne,  [20, 24], [[0,0], [64,114]]),
       objects: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,0], [420,96]])
     };
 
@@ -109,13 +110,14 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
     return obj;
   };
 
-  MapScene.prototype.checkSpace = function(pos) {
+  MapScene.prototype.checkSpace = function(pos, player) {
     var open = true;
     var edge = false;
-
+    console.warn(this.tiles[pos[0]][pos[1]]);
     if (this.tiles[pos[0]][pos[1]] === 2) {
       var battle = new $battleScene.BattleScene(this.director);
-      this.director.replaceScene(battle);
+      battle.player = battle.addPerson([1,1]);
+      this.director.push(battle);
     }
 
     if ((pos[1] > this.objects[0].length - 1) || (pos[1] < 0) || (pos[0] < 0) || (pos[0] > this.objects.length - 1)) {

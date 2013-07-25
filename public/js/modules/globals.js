@@ -8,7 +8,8 @@ define(function() {
         	grass: '/images/grass.png',
         	dirt: '/images/dirt.png',
             highGrass: '/images/highGrass.png',
-            sprites: '/images/overworld-sprites.png'
+            sprites: '/images/overworld-sprites.png',
+            genOne: '/images/1-151.png'
         }
     };
 });
