@@ -1,5 +1,5 @@
-define(['underscore','gamejs', 'modules/scenes/map'], 
-  function(_, $gamejs, $map) {
+define(['underscore','gamejs', 'modules/scenes/map', "modules/globals"], 
+  function(_, $gamejs, $map, $g) {
 
   var StartScene = function(director) {
       this.director = director;
@@ -11,7 +11,7 @@ define(['underscore','gamejs', 'modules/scenes/map'],
       this.handle = function(event) {
         if(event.type === $gamejs.event.KEY_DOWN) {
             var map = new $map.MapScene(this.director);
-            map.player = map.addPerson([2,3]);
+            $g.map = map;
             map.addObject([3,2], 2);
             map.addObject([5,4], 2);
             map.addObject([2,2], 2);

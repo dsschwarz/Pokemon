@@ -2,58 +2,71 @@ var $globals = require("./globals")
   , $gamejs = require("../lib/gamejs")
   , $mapobj = require("./mapobject");
 var Person = function(map, pos, imageNum){
-this.imgNum = imageNum || 16;
-Person.superConstructor.apply(this, arguments);
-this.moving = false;
-this.map = map;
-this.move_delay = 0;
-return this;
+	this.imgNum = imageNum || 16;
+	Person.superConstructor.apply(this, arguments);
+	this.moving = false;
+	this.map = map;
+	this.type = "person";
+	this.move_delay = 0;
+	return this;
 }
 
 $gamejs.utils.objects.extend(Person, $mapobj.MapObject);
 
 Person.prototype.handle = function(event) {
 	var $e = $gamejs.event;
-
+	var action = "";
 	if(event.type === $e.KEY_DOWN) {
 	if (event.key == $e.K_w) {
 		this.moving = 'up';
+		action = "move";
 	} else if (event.key == $e.K_s) {
 		this.moving = 'down';
+		action = "move";
 	} else if (event.key == $e.K_d) {
 		this.moving = 'right';
+		action = "move";
 	} else if (event.key == $e.K_a) {
 		this.moving = 'left';
+		action = "move";
 	}
 	}
 	if(event.type === $e.KEY_UP) {
 		if (event.key == $e.K_w) {
 			if(this.moving === 'up') {
 				this.moving = false;
+				action = "stop";
 			}
 		} else if (event.key == $e.K_s) {
 			if(this.moving === 'down') {
 				this.moving = false;
+				action = "stop";
 			}
 		} else if (event.key == $e.K_d) {
 			if(this.moving === 'right') {
 				this.moving = false;
+				action = "stop";
 			}
 		} else if (event.key == $e.K_a) {
 			if(this.moving === 'left') {
 				this.moving = false;
+				action = "stop";
 			}
 		}
 	}
+	return action;
 };
 Person.prototype.update = function(msDuration) {
-if ((this.moving) && (this.move_delay <= 0)) {
-	this.move();
-	this.move_delay = 200;
-};
-if (this.move_delay > 0) {
-	this.move_delay -= msDuration;
-};
+	if ((this.moving) && (this.move_delay <= 0)) {
+		this.move();
+		this.move_delay = 200;
+		this.socket.emit("move", this.id, {pos: this.pos, moving: this.moving});
+		this.socket.broadcast.emit("move",  this.id, {pos: this.pos, moving: this.moving});
+		console.log("Person Pos: " + this.pos[0] + ", " + this.pos[1]);
+	};
+	if (this.move_delay > 0) {
+		this.move_delay -= msDuration;
+	};
 
 };
 

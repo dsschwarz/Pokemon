@@ -1,0 +1,15 @@
+JS files can only require modules lower than them on the heirarchy.
+
+app    mapeditor
+socket
+main
+director
+start
+map
+mapobject
+people
+animation
+mapinfo
+globals   <--always at the bottom
+
+libs (gamejs, etc)

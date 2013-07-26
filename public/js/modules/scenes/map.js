@@ -66,22 +66,19 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
     };
   };
   MapScene.prototype.handle = function(event) {
-    if (event.type === $gamejs.event.MOUSE_DOWN) {
-      this.director.pop();
-    }
     if (this.player) {
       this.player.handle(event);
     };
   }
-  MapScene.prototype.addObject = function(pos, imageNum) {
-    var obj = new $mapobj.MapObject(this, pos, imageNum);
+  MapScene.prototype.addObject = function(id, pos, imageNum) {
+    var obj = new $mapobj.MapObject(this, id, pos, imageNum);
     this.objects[pos[0]][pos[1]] = obj;
     console.log(obj);
     this.objectGroup.add(obj);
     return obj;
   };
-  MapScene.prototype.addPerson = function(pos, num) {
-    var obj = new $people.Person(this, pos, num);
+  MapScene.prototype.addPerson = function(id, pos, num) {
+    var obj = new $people.Person(this, id, pos, num);
     this.objects[pos[0]][pos[1]] = obj;
     console.log(obj);
     console.log(obj.image)

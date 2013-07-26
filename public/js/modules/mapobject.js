@@ -5,9 +5,10 @@
  */
 
 define(['underscore', 'gamejs', 'modules/globals'], function(_, $gamejs, $globals) {
-    var MapObject = function(map, pos, imageNum){
-      this.imgNum = imageNum || 2;
+    var MapObject = function(map, id, pos, imageNum){
   		MapObject.superConstructor.apply(this, arguments);
+      this.imgNum = imageNum || 2;
+      this.id = id;
   		this.map = map;
   		this.pos = pos;
       this.image = map.spriteSheets.objects.get(this.imgNum);

@@ -35,7 +35,6 @@ Map.prototype.addObject = function(pos, imageNum) {
 };
 Map.prototype.addPerson = function(pos, num) {
   var obj = new $people.Person(this, pos, num);
-  var obj = {};
   this.objects[pos[0]][pos[1]] = obj;
   this.objectGroup.add(obj);
   return obj;

@@ -14,7 +14,7 @@ for (var i = $maps.MAP_HEIGHT - 1; i >= 0; i--) {
 var tick = function() {
 	var msDuration = (Date.now() - TIMER_LASTCALL);
 	TIMER_LASTCALL = Date.now();
-	updateMaps();
+	updateMaps(msDuration);
 }
 setInterval(tick, 30);
 var TIMER_LASTCALL = Date.now();

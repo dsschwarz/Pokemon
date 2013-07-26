@@ -231,7 +231,6 @@ define(function (require, exports, module) {
 
             if ((!ev.ctrlKey && !ev.metaKey &&
                  ((key >= exports.K_LEFT && key <= exports.K_DOWN) ||
-                  (key >= exports.K_0    && key <= exports.K_z) ||
                   (key >= exports.K_KP1  && key <= exports.K_KP9) ||
                   key === exports.K_SPACE ||
                   key === exports.K_TAB ||
