@@ -50,7 +50,7 @@ for (var i = exports.MAP_HEIGHT - 1; i >= 0; i--) {
 				map.tiles = tiles;
 				map.objects = objects;
 			});
-		catch(err) {
+		} catch(err) {
 			console.log("Error Reading Map");
 			console.log(err)
 		};

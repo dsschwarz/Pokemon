@@ -185,8 +185,11 @@ define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'],
       pokemon: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,96], [420,600]]),
       objects: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,0], [420,96]])
     };
-    this.tileImages = [$gamejs.transform.scale($gamejs.image.load($globals.images.grass), this.TILE_SIZE),
-    $gamejs.transform.scale($gamejs.image.load($globals.images.dirt), this.TILE_SIZE)];
+    this.tileImages = [
+        $gamejs.transform.scale($gamejs.image.load($globals.images.grass), this.TILE_SIZE),
+        $gamejs.transform.scale($gamejs.image.load($globals.images.dirt), this.TILE_SIZE),
+        $gamejs.transform.scale($gamejs.image.load($globals.images.highGrass), this.TILE_SIZE)
+    ];
     return this;
   };
 
