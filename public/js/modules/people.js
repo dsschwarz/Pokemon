@@ -63,10 +63,8 @@ define(['underscore', 'gamejs', 'modules/globals', 'modules/mapobject'], functio
 		// if (this.move_delay > 0) {
 		// 	this.move_delay -= msDuration;
 		// };
+    }; 
 
-    };
-
-    
 
     // Person.prototype.move = function() {
     // 	var pos = this.pos;
@@ -145,7 +143,7 @@ define(['underscore', 'gamejs', 'modules/globals', 'modules/mapobject'], functio
 
   //   }
 
-    return {
-    	Person: Person
-    }
+  return {
+  	Person: Person
+  }
 });

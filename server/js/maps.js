@@ -4,6 +4,7 @@ var $map = require("./map")
   , $gamejs = require("../lib/gamejs")
   , fs = require("fs")
   , $mapobj = require("./mapobject");
+
 var readMap = function(filePath, callback) {
 	var tiles= [];
 	var data = fs.readFileSync(filePath, 'utf8');
@@ -29,6 +30,7 @@ var readMap = function(filePath, callback) {
 		callback(tile_data, object_data);
 	};
 };
+
 var maps = [];
 
 for (var i = exports.MAP_HEIGHT - 1; i >= 0; i--) {
@@ -52,4 +54,5 @@ for (var i = exports.MAP_HEIGHT - 1; i >= 0; i--) {
 	}
 	maps.push(row);
 };
+
 exports.maps = maps;

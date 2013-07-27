@@ -1,8 +1,9 @@
-// var socket = io.connect('http://192.34.63.118:3000');
+
 
 define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], function(main, $gamejs, $globals, $map) {
   $("#gjs-canvas").hide();
   var socket = io.connect('http://localhost:1337');
+  // var socket = io.connect('http://192.34.63.118:3000');
   $globals.socket = socket;
   socket.on('connect', function(data){
     console.log('Connected');

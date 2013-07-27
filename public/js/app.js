@@ -12,4 +12,6 @@ require(['jquery', 'gamejs', 'modules/globals', 'socket'], function($, gamejs, $
     for (var image in $globals.images){
         gamejs.preload([$globals.images[image]]);
     }
+    gamejs.ready(main);
+
 });
