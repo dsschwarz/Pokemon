@@ -45,11 +45,15 @@ for (var i = exports.MAP_HEIGHT - 1; i >= 0; i--) {
 		} else if (j < 10) {
 			filePath = i + "0" + j + ".txt";
 		}
-
-		readMap("./server/maps/" + filePath, function(tiles, objects) {
-			map.tiles = tiles;
-			map.objects = objects;
-		});
+		try {
+			readMap("./server/maps/" + filePath, function(tiles, objects) {
+				map.tiles = tiles;
+				map.objects = objects;
+			});
+		catch(err) {
+			console.log("Error Reading Map");
+			console.log(err)
+		};
 		row.push(map);
 	}
 	maps.push(row);
