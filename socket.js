@@ -13,7 +13,7 @@ exports.io = function(socket) {
 		
 		var objs = [];
 		mapPlayer.map.objectGroup.forEach(function(obj) {
-			objs.push({pos: obj.pos, imgNum: obj.imgNum, id: obj.id, type: obj.type})
+			objs.push({pos: obj.pos, imgNum: obj.imgNum, id: obj.id, type: obj.type, moving: obj.moving})
 		})
 		socket.emit('join_success', $g.players, {map: {tiles: mapPlayer.map.tiles, objects: objs}, number: player.number});
 		socket.broadcast.emit("new_player", player, {pos: mapPlayer.pos, imgNum: mapPlayer.imgNum, id: mapPlayer.id, type: mapPlayer.type});

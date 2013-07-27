@@ -21,7 +21,7 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
 
     this.spriteSheets = {
       // pokemon: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,96], [420,600]]),
-      pokemon: new $anim.SpriteSheet($globals.images.genOne,  [20, 24], [[0,0], [64,114]]),
+      pokemon: new $anim.SpriteSheet($globals.images.genOne,  [32, 32], [[0,8], [128,9728]]),
       objects: new $anim.SpriteSheet($globals.images.sprites, [20, 24], [[340,0], [420,96]])
     };
 
@@ -69,8 +69,12 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
             (i - offset[1]) * this.TILE_SIZE[0]
           ];
         surface.blit(this.tileImages[tile], new $gamejs.Rect(draw_pos));
+        // var img = this.spriteSheets.pokemon.get(j);
+        // if (img)
+        //   surface.blit(img, new $gamejs.Rect(draw_pos[0], draw_pos[1]))
         if (object != 0) {
-          surface.blit(object.image, new $gamejs.Rect(draw_pos[0] + (this.TILE_SIZE[0] - object.image.getSize()[0])/2, draw_pos[1]));
+          surface.blit($gamejs.transform.scale(object.image, this.TILE_SIZE), 
+            new $gamejs.Rect(draw_pos[0] + (this.TILE_SIZE[0] - object.image.getSize()[0])/2, draw_pos[1]));
         };
       };
     };
@@ -84,15 +88,12 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
   MapScene.prototype.addObject = function(id, pos, imageNum) {
     var obj = new $mapobj.MapObject(this, id, pos, imageNum);
     this.objects[pos[0]][pos[1]] = obj;
-    console.log(obj);
     this.objectGroup.add(obj);
     return obj;
   };
   MapScene.prototype.addPerson = function(id, pos, num) {
     var obj = new $people.Person(this, id, pos, num);
     this.objects[pos[0]][pos[1]] = obj;
-    console.log(obj);
-    console.log(obj.image)
     this.objectGroup.add(obj);
     return obj;
   };
@@ -100,7 +101,6 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
   MapScene.prototype.addNPC = function(pos, num, moveCycle) {
     var obj = new $people.NPC(this, pos, num, moveCycle);
     this.objects[pos[0]][pos[1]] = obj;
-    console.log(obj);
     this.objectGroup.add(obj);
     return obj;
   };

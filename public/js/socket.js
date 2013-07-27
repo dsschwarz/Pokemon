@@ -35,7 +35,6 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
     });
     socket.on('move', function(number, player) {
       var clientPlayer = getObject(number);
-      console.log(number);
       if (clientPlayer) {
         clientPlayer.map.objects[clientPlayer.pos[0]][clientPlayer.pos[1]] = 0;
         update_attributes(clientPlayer, player);
@@ -51,16 +50,18 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
 
   });
   var createObject = function(obj) {
+    var tempObject = false;
     if(obj.type === "mapobject")
-        $globals.game.map.addObject(obj.id, obj.pos, obj.imageNum);
-      else if(obj.type === "person") {
-        var person = $globals.game.map.addPerson(obj.id, obj.pos, obj.imageNum);
-      };
+      tempObject = $globals.game.map.addObject(obj.id, obj.pos, obj.imageNum);
+    else if(obj.type === "person") {
+      tempObject = $globals.game.map.addPerson(obj.id, obj.pos, obj.imageNum);
+    };
+    update_attributes(tempObject, obj);
+    return tempObject;
   }
   var getObject = function(number) {
     var tempObject = false;
     $globals.game.map.objectGroup.forEach(function(object) {
-      console.log(object)
       if (object.id === number) {
         tempObject = object;
       };

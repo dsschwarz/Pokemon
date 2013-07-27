@@ -94,7 +94,6 @@ define(['underscore','gamejs', 'modules/globals', 'modules/animation', 'modules/
   BattleScene.prototype.addObject = function(pos, imageNum) {
     var obj = new $mapobj.MapObject(this, pos, imageNum);
     this.objects[pos[0]][pos[1]] = obj;
-    console.log(obj);
     this.objectGroup.add(obj);
     return obj;
   };
@@ -102,8 +101,6 @@ define(['underscore','gamejs', 'modules/globals', 'modules/animation', 'modules/
   BattleScene.prototype.addPerson = function(pos, num) {
     var obj = new $people.Person(this, pos, num);
     this.objects[pos[0]][pos[1]] = obj;
-    console.log(obj);
-    console.log(obj.image)
     this.objectGroup.add(obj);
     return obj;
   };
