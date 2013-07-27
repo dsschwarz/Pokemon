@@ -139,7 +139,7 @@ define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'],
     var randomize = function(startPos, endPos) {
       for (var i = startPos[0]; i <= startPos[1]; i++) {
         for (var j = endPos[0]; j <= endPos[1]; j++) {
-          map.tiles[i][j] = Math.floor(Math.random() * 2);
+          map.tiles[i][j] = Math.floor(Math.random() * 3);
         };
       };
       map.draw(display);
