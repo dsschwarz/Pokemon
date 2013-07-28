@@ -116,11 +116,6 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
       edge = true;
       console.log("At edge");
     } else {
-      if (this.tiles[pos[0]][pos[1]] === 2) {
-        var battle = new $battleScene.BattleScene(this.director);
-        battle.player = battle.addPerson([1,1]);
-        this.director.push(battle);
-      }
       if(this.objects[pos[0]][pos[1]] != 0) {
         open = false;
         object = this.objects[pos[0]][pos[1]];

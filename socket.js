@@ -25,11 +25,27 @@ exports.io = function(socket) {
 			// 	socket.broadcast.emit("move", player.number, {pos: mapPlayer.pos, moving: mapPlayer.moving});
 			// };
 		});
+
+		//New disconnect function
+		socket.on('disconnect', function() {
+		  	console.log("User removed: " + player.name)
+		  	for (var i = $g.players.length - 1; i >= 0; i--) {
+		  		if($g.players[i].name === player.name) {
+		  			$g.players.splice(i, 1);
+		  			break;
+		  		}
+		  	};
+		  	mapPlayer.map.objects[mapPlayer.pos[0]][mapPlayer.pos[1]] = 0;
+		  	mapPlayer.kill();
+		  	socket.broadcast.emit('playerdc', player);
+		});
 	});
 
-  socket.on('disconnect', function() {
-  	console.log("The user disconnected")
-  });
+	socket.on('disconnect', function() {
+		console.log("The user disconnected")
+
+		delete(player);
+	});
 };
 
 counter = 0;

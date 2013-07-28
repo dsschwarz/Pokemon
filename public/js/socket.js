@@ -5,6 +5,8 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
   var socket = io.connect('http://localhost:1337');
   // var socket = io.connect('http://192.34.63.118:3000');
   $globals.socket = socket;
+  $gamejs.ready(main);
+
   socket.on('connect', function(data){
     console.log('Connected');
     $("#join-button").click(function(ev){
@@ -13,8 +15,13 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
             console.log("Attempting Join")
         };
     });
+    socket.on('playerdc', function(player) {
+      console.info(deleteObject(player.number));
+      $("users-list").remove(":contains(" + "player.name" + ")")
+      console.info("Player " + player.name + " disconnected");
+
+    })
   });
-  $gamejs.ready(main);
   socket.on('join_success', function(players, data) {
     $("#gjs-canvas").show();
     $('#users-list').empty();
@@ -78,6 +85,15 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
           obj[key] = update_attributes(obj[key], obj2[key]);
       };
       return obj;
+  };
+  var deleteObject = function(number) {
+    var tempObject = getObject(number);
+    tempObject.map.objects[tempObject.pos[0]][tempObject.pos[1]] = 0;
+    if (tempObject.kill) {
+      tempObject.kill();
+      return true;
+    } else
+      return false;
   };
   return {
     socket: socket
