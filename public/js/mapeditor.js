@@ -19,19 +19,28 @@ define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'],
   var panning = false;
   var prevMousePos = [0, 0];
   var offset = [0, 0]; // Can be changed by editor (pan)
+  var placeType = "tile";
+  var imageNum = 0;
   var map = {};
   var maps = [];
   $gamejs.ready(function(){
     var canvas  =$("#gjs-canvas");
     var display = $gamejs.display.setMode([600, 600]);
     var tileType = 1;
-    var tileSelect = $(".tiles-select");
-    for (var i = tileSelect.length - 1; i >= 0; i--) {
-      tileSelect[i].onclick = function(event){
+    var tileSelects = $(".tiles-select")
+    for (var i = tileSelects.length - 1; i >= 0; i--) {
+      tileSelects[i].onclick = function(event){
         tileType = event.target.value;
         console.log(tileType);
-      }
+        placeType = "tile";
+      };
     };
+    console.log($("#place-object"))
+    $("#place-object").click(function(event) {
+      placeType = "object";
+      console.log("Place object")
+      imageNum = $("#imageNum-input").val();
+    });
     $.ajax({
       type: "GET",
       url: "/load"
@@ -44,7 +53,7 @@ define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'],
         for (var j = 0; j < data.maps[i].length; j++) {
           row.push(new Map(data.maps[i][j].tiles, data.maps[i][j].objects, [i, j]));
           data.maps[i][j].objects.forEach(function(obj) {
-            row[row.length - 1].addObject(obj.pos, obj.imageNum);
+            row[row.length - 1].addObject(obj.pos, obj.imgNum);
           });
         };
         maps.push(row);
@@ -67,11 +76,6 @@ define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'],
       });
       $("#saveButton").click(function(event) {
         dataMaps = [];
-        // var objs = [];
-        // map.objectGroup.forEach(function(obj) {
-        //   objs.push({pos: obj.pos, imgNum: obj.imgNum})
-        // })
-        // dataMaps.push({tiles: map.tiles, objects: objs, pos: map.pos})
         maps.forEach(function(mapRow) {
           var row =[];
           mapRow.forEach(function(mapObject) {
@@ -99,29 +103,32 @@ define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'],
       } else {
         var canvasOffset = canvas.offset();
         tilePos = getTile([event.pageX - canvasOffset.left, event.pageY - canvasOffset.top]);
-        map.tiles[tilePos[0]][tilePos[1]] = tileType;
+        if (placeType === "tile")
+          map.tiles[tilePos[0]][tilePos[1]] = tileType;
+        else if (placeType === "object")
+          map.addObject(tilePos, imageNum);
         map.draw(display);
       }
     }
     var onMouseUp = function(event) {
       if(panning) {
-        offset[0] += Math.floor((event.pageX - prevMousePos[0])/map.TILE_SIZE[0]);
-        offset[1] += Math.floor((event.pageY - prevMousePos[1])/map.TILE_SIZE[1]);
+        offset[0] += event.pageX - prevMousePos[0];
+        offset[1] += event.pageY - prevMousePos[1];
         panning = false;
       }
       map.draw(display);
     }
     var onMouseMove = function(event) {
       if(panning) {
-        offset[0] += Math.round((event.pageX - prevMousePos[0])/map.TILE_SIZE[0]);
-        offset[1] += Math.round((event.pageY - prevMousePos[1])/map.TILE_SIZE[1]);
+        offset[0] += event.pageX - prevMousePos[0];
+        offset[1] += event.pageY - prevMousePos[1];
         prevMousePos = [event.pageX, event.pageY];
         map.draw(display);
       }
     }
     var getTile = function(pos) {
       // Converts pos (x, y) to tile position (row, column)
-      var tilePos = [Math.floor(pos[1] / map.TILE_SIZE[1]) + offset[1], Math.floor(pos[0] / map.TILE_SIZE[0]) + offset[0]]
+      var tilePos = [Math.floor((pos[1] + offset[1])/ map.TILE_SIZE[1]), Math.floor((pos[0] + offset[0])/ map.TILE_SIZE[0])]
       console.log(tilePos);
       return(tilePos);
     }
@@ -203,8 +210,8 @@ define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'],
       for (var j = this.tiles[0].length - 1; j >= 0; j--) {
         var tile = this.tiles[i][j];
         var object = this.objects[i][j];
-        var draw_pos = [(j - offset[0]) * this.TILE_SIZE[1], 
-        (i - offset[1]) * this.TILE_SIZE[0]];
+        var draw_pos = [j * this.TILE_SIZE[1] - offset[0], 
+        i * this.TILE_SIZE[0] - offset[1]];
         surface.blit(this.tileImages[tile], new $gamejs.Rect(draw_pos));
         if (object != 0) {
           surface.blit(object.image, new $gamejs.Rect(draw_pos[0] + (this.TILE_SIZE[0] - object.image.getSize()[0])/2, draw_pos[1]));
@@ -213,7 +220,7 @@ define(['gamejs', 'modules/animation', 'modules/mapobject', 'modules/globals'],
     };
   };
   Map.prototype.addObject = function(pos, imageNum) {
-    var obj = new $mapobj.MapObject(this, pos, imageNum);
+    var obj = new $mapobj.MapObject(this, 0, pos, imageNum);
     this.objects[pos[0]][pos[1]] = obj;
     this.objectGroup.add(obj);
     return obj;

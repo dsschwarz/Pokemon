@@ -19,9 +19,9 @@ var readMap = function(filePath, callback) {
 			console.log( "ERR parsing map objects")
 		}
 	};
-	for (var i = tile_data.length - 1; i >= 0; i--) {
+	for (var i = 0; i < tile_data.length; i++) {
 		tile_data[i] = tile_data[i].split(" ");
-		for (var j = tile_data[i].length - 1; j >= 0; j--) {
+		for (var j = 0; j < tile_data[i].length; j++) {
 			tile_data[i][j] = parseInt(tile_data[i][j]);
 		};
 	};
@@ -33,9 +33,9 @@ var readMap = function(filePath, callback) {
 
 var maps = [];
 
-for (var i = exports.MAP_HEIGHT - 1; i >= 0; i--) {
+for (var i = 0; i < exports.MAP_HEIGHT; i++) {
 	var row = [];
-	for (var j = exports.MAP_WIDTH - 1; j >= 0; j--) {
+	for (var j = 0; j < exports.MAP_WIDTH; j++) {
 		var map = {};
 		var filePath = i + (j + ".txt");
 		if ((i < 10) && (j < 10)) {

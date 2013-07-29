@@ -18,7 +18,7 @@ var Map = function(mapPos) {
   this.TILE_SIZE = [30,30];
   for (var i = mapInfo.objects.length - 1; i >= 0; i--) {
     var obj = mapInfo.objects[i];
-    this.addObject(obj.pos, obj.image);
+    this.addObject(obj.pos, obj.imgNum);
   };
   
   return this;

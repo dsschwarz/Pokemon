@@ -68,9 +68,9 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
   var createObject = function(obj) {
     var tempObject = false;
     if(obj.type === "mapobject")
-      tempObject = $globals.game.map.addObject(obj.id, obj.pos, obj.imageNum);
+      tempObject = $globals.game.map.addObject(obj.id, obj.pos, obj.imgNum);
     else if(obj.type === "person") {
-      tempObject = $globals.game.map.addPerson(obj.id, obj.pos, obj.imageNum);
+      tempObject = $globals.game.map.addPerson(obj.id, obj.pos, obj.imgNum);
     };
     update_attributes(tempObject, obj);
     if (tempObject.moving)
