@@ -54,7 +54,16 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
       createObject(obj);
       console.log("Created obj" + obj.id)
     });
-
+    socket.on('delete', deleteObject);
+    socket.on('mapChange', function(data) {
+      console.log("Changing Map");
+      var map = new $map.MapScene($globals.game.director);
+      $globals.game.director.replaceScene(map);
+      $globals.game.map = map;
+      map.tiles = data.map.tiles;
+      data.map.objects.forEach(createObject);
+      map.player = getObject(data.number);
+    });
   });
   var createObject = function(obj) {
     var tempObject = false;
@@ -64,6 +73,8 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
       tempObject = $globals.game.map.addPerson(obj.id, obj.pos, obj.imageNum);
     };
     update_attributes(tempObject, obj);
+    if (tempObject.moving)
+      tempObject.image = tempObject.images[tempObject.moving];
     return tempObject;
   }
   var getObject = function(number) {
@@ -88,12 +99,16 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
   };
   var deleteObject = function(number) {
     var tempObject = getObject(number);
-    tempObject.map.objects[tempObject.pos[0]][tempObject.pos[1]] = 0;
-    if (tempObject.kill) {
-      tempObject.kill();
-      return true;
-    } else
-      return false;
+    if (tempObject) {
+      if ((tempObject.map) && (tempObject.map.remove))
+        tempObject.map.remove(tempObject);
+      else if (tempObject.kill)
+        tempObject.kill();
+      else {
+        console.warn("Could not delete object: " + number);
+        console.info(tempObject);
+      }
+    }
   };
   return {
     socket: socket

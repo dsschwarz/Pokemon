@@ -4,7 +4,7 @@ exports.io = function(socket) {
 	socket.on('join', function(name) {
 		var player = new Player(name);
 		$g.players.push(player);
-		var mapPlayer = $g.maps[0][0].addPerson([10, 10], 16);
+		var mapPlayer = $g.maps[0][0].addPerson([18, 10], 16);
 		mapPlayer.socket = socket;
 		player.number = mapPlayer.id;
 		socket.set('player', player);
@@ -35,8 +35,8 @@ exports.io = function(socket) {
 		  			break;
 		  		}
 		  	};
-		  	mapPlayer.map.objects[mapPlayer.pos[0]][mapPlayer.pos[1]] = 0;
-		  	mapPlayer.kill();
+		  	mapPlayer.map.remove(mapPlayer);
+
 		  	socket.broadcast.emit('playerdc', player);
 		});
 	});

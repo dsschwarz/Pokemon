@@ -45,6 +45,10 @@ Map.prototype.addNPC = function(pos, num, moveCycle) {
   this.objectGroup.add(obj);
   return obj;
 };
+Map.prototype.remove = function(mapObject) {
+  this.objects[mapObject.pos[0]][mapObject.pos[1]] = 0;
+  this.objectGroup.remove(mapObject);
+};
 
 Map.prototype.checkSpace = function(pos) {
   var open = true;

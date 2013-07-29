@@ -2,8 +2,8 @@ var $globals = require("./globals")
   , $gamejs = require("../lib/gamejs")
   , $mapobj = require("./mapobject");
 var Person = function(map, pos, imageNum){
-	this.imgNum = imageNum || 16;
 	Person.superConstructor.apply(this, arguments);
+	this.imgNum = imageNum || 16;
 	this.moving = false;
 	this.map = map;
 	this.type = "person";
@@ -104,11 +104,47 @@ Person.prototype.move = function() {
 			this.map.objects[this.pos[0]][this.pos[1]] = this;
 		};
 	};
-	if ((check.edge) && (this === this.map.player)) {
-		this.map.changeMap(this.moving);
+	if (check.edge) {
+		this.changeMap(this.moving);
 		this.moving = false;
-		console.log("Changing Map")
 	}
+};
+Person.prototype.changeMap = function(dir) {
+	var mapPos = this.map.mapPos;
+	var switchedMap = true;
+	this.map.remove(this);
+	console.log(mapPos);
+	if ((dir === "left") && (mapPos[1] != 0)) {
+		this.map = $globals.maps[mapPos[0]][mapPos[1] - 1];
+		this.pos = [this.pos[0], this.map.tiles[this.pos[0]].length - 1];
+	} else if ((dir === "right") && (mapPos[1] != $globals.maps[mapPos[0]].length - 1)) {
+		this.map = $globals.maps[mapPos[0]][mapPos[1] + 1];
+		this.pos = [this.pos[0], 0];
+	} else if ((dir === "down") && (mapPos[0] != $globals.maps.length - 1)) {
+		this.map = $globals.maps[mapPos[0] + 1][mapPos[1]];
+		this.pos = [0, this.pos[1]];
+	} else if ((dir === "up") && (mapPos[0] != 0)) {
+		this.map = $globals.maps[mapPos[0] - 1][mapPos[1]];
+		this.pos = [this.map.tiles.length - 1, this.pos[1]];
+	} else {
+		switchedMap = false;
+	}
+	if (switchedMap) {
+		this.moving = dir;
+		console.log("Changing Map")
+		console.log(this.map.mapPos)
+		this.map.objectGroup.add(this);
+		this.map.objects[this.pos[0]][this.pos[1]] = this;
+
+		var objs = [];
+		this.map.objectGroup.forEach(function(obj) {
+			objs.push({pos: obj.pos, imgNum: obj.imgNum, id: obj.id, type: obj.type, moving: obj.moving})
+		});
+		this.socket.emit("mapChange", {map: {tiles: this.map.tiles, objects: objs}, number: this.id});
+	} else {
+		this.map.objectGroup.add(this);
+		this.map.objects[this.pos[0]][this.pos[1]] = this;
+	};
 };
 var NonPlayableChar = function(map, pos, imageNum, moveCycle) {
 	NonPlayableChar.superConstructor.apply(this, arguments);

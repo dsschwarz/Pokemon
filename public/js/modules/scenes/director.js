@@ -60,10 +60,16 @@ define(function() {
     }
   };
 
-  Director.prototype.popAll = function () {
+  // Pops all scenes. If a scene is passed, pushs scene.
+  Director.prototype.popAll = function (scene) {
     this.sceneStack = [];
     this.activeScene = null;
     this.onAir = false;
+    if (scene) {
+      console.log("Popped to scene")
+      this.sceneStack.push(scene);
+      this.activeScene = scene;
+    };
   }
 
   Director.prototype.getScene = function() {

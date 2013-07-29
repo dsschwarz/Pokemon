@@ -104,7 +104,10 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
     this.objectGroup.add(obj);
     return obj;
   };
-
+  MapScene.prototype.remove = function(mapObject) {
+    this.objects[mapObject.pos[0]][mapObject.pos[1]] = 0;
+    this.objectGroup.remove(mapObject);
+  };
   MapScene.prototype.checkSpace = function(pos, player) {
     var open = true;
     var edge = false;
@@ -135,25 +138,6 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
     // 
     // this.director.push(new TransitionScene);
     console.log("Awaiting map change");
-
-
-    /*if (dir === "right") {
-      var map = new MapScene(this.director);
-      map.player = map.addPerson([this.playerPos[0], 0])
-      this.director.push(map);
-    } else if (dir === "left") {
-      var map = new MapScene(this.director);
-      map.player = map.addPerson([this.playerPos[0], map.objects[0].length - 1])
-      this.director.push(map);
-    } else if (dir === "up") {
-      var map = new MapScene(this.director);
-      map.player = map.addPerson([map.objects.length - 1, this.playerPos[1]])
-      this.director.push(map);
-    } else if (dir === "down") {
-      var map = new MapScene(this.director);
-      map.player = map.addPerson([0, this.playerPos[1]])
-      this.director.push(map);
-    }*/
   };
 
   return {

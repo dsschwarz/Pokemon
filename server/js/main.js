@@ -3,9 +3,9 @@ var $maps = require("./maps")
   , $gamejs = require("../lib/gamejs")
   , $g = require("./globals");
 
-for (var i = $maps.MAP_HEIGHT - 1; i >= 0; i--) {
+for (var i = 0; i < $maps.MAP_HEIGHT; i++) {
 	var row = [];
-	for (var j = $maps.MAP_WIDTH - 1; j >= 0; j--) {
+	for (var j = 0; j < $maps.MAP_WIDTH; j++) {
 		row.push(new $map.Map([i, j]));
 	}
 	$g.maps.push(row);
