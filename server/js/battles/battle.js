@@ -1,10 +1,10 @@
-var $maps = require("./maps")
-  , $gamejs = require("../lib/gamejs")
-  , $mapobj = require("./mapobject")
-  , $people = require("./people");
-var Map = function(mapPos) {
-  this.mapPos = mapPos || [0, 0];
-  var mapInfo = $maps.maps[mapPos[0]][mapPos[1]]; // Two dimensional array of tiles
+var $maps = require("../maps")
+  , $gamejs = require("../../lib/gamejs")
+  , $mapobj = require("../mapobject")
+  , $people = require("../people");
+var Battle = function(number) {
+  var number = number || 0;
+  var mapInfo = $maps.battleMaps[number]; // Two dimensional array of tiles
   this.tiles = mapInfo.tiles;
   this.objects = []; //2D array of objects
   for (var i = this.tiles.length - 1; i >= 0; i--) {
@@ -24,33 +24,27 @@ var Map = function(mapPos) {
   return this;
 };
 
-Map.prototype.update = function(msDuration) {
+Battle.prototype.update = function(msDuration) {
   this.objectGroup.update(msDuration);
 };
-Map.prototype.addObject = function(pos, imageNum) {
+Battle.prototype.addObject = function(pos, imageNum) {
   var obj = new $mapobj.MapObject(this, pos, imageNum);
   this.objects[pos[0]][pos[1]].add(obj);
   this.objectGroup.add(obj);
   return obj;
 };
-Map.prototype.addPerson = function(pos, num) {
+Battle.prototype.addPerson = function(pos, num) {
   var obj = new $people.Person(this, pos, num);
   this.objects[pos[0]][pos[1]].add(obj);
   this.objectGroup.add(obj);
   return obj;
 };
-Map.prototype.addNPC = function(pos, num, moveCycle) {
-  var obj = new $people.NPC(this, pos, num, moveCycle);
-  this.objects[pos[0]][pos[1]].add(obj);
-  this.objectGroup.add(obj);
-  return obj;
-};
-Map.prototype.remove = function(mapObject) {
+Battle.prototype.remove = function(mapObject) {
   this.objects[mapObject.pos[0]][mapObject.pos[1]].remove(mapObject);
   this.objectGroup.remove(mapObject);
 };
 
-Map.prototype.checkSpace = function(pos) {
+Battle.prototype.checkSpace = function(pos) {
   var open = true;
   var edge = false;
   var objects = {};
@@ -58,7 +52,7 @@ Map.prototype.checkSpace = function(pos) {
     open = false;
     edge = true;
   } else {
-    if(this.objects[pos[0]][pos[1]].sprites().length) {
+    if(this.objects[pos[0]][pos[1]].sprites().length) { // If any object <--Change to if any "opaque" object
       open = false;
       objects = this.objects[pos[0]][pos[1]];
     }
@@ -69,4 +63,4 @@ Map.prototype.checkSpace = function(pos) {
     objects: objects
   };
 };
-exports.Map = Map;
+exports.Battle = Battle;

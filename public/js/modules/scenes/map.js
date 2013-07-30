@@ -1,14 +1,14 @@
 define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/animation', 'modules/mapobject', 'modules/people', 'modules/scenes/battle'], 
   function(_, $gamejs, $globals, $mapinfo, $anim, $mapobj, $people, $battleScene) {
 
-  var MapScene = function(director) {
-    this.tiles = $mapinfo.maps[1]; // Two dimensional array of tiles
+  var MapScene = function(director, tiles) {
+    this.tiles = tiles || [[0]];
     this.objects = []; //2D array of objects
 
     for (var i = this.tiles.length - 1; i >= 0; i--) {
       var temp = [];
       for (var j = this.tiles[i].length - 1; j >= 0; j--) {
-        temp[j] = 0;
+        temp[j] = new $gamejs.sprite.Group();
       };
       this.objects.push(temp);
     };
@@ -63,7 +63,6 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
     for (var i = range[1][0] - 1; i >= range[0][0]; i--) {
       for (var j = range[1][1] - 1; j >= range[0][1]; j--) {
         var tile = this.tiles[i][j];
-        var object = this.objects[i][j];
         var draw_pos = [
             (j - offset[0]) * this.TILE_SIZE[1], 
             (i - offset[1]) * this.TILE_SIZE[0]
@@ -72,10 +71,7 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
         // var img = this.spriteSheets.pokemon.get(j);
         // if (img)
         //   surface.blit(img, new $gamejs.Rect(draw_pos[0], draw_pos[1]))
-        if (object != 0) {
-          surface.blit($gamejs.transform.scale(object.image, this.TILE_SIZE), 
-            new $gamejs.Rect(draw_pos[0] + (this.TILE_SIZE[0] - object.image.getSize()[0])/2, draw_pos[1]));
-        };
+        this.objects[i][j].draw(surface, draw_pos);
       };
     };
   };
@@ -87,48 +83,26 @@ define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/an
   }
   MapScene.prototype.addObject = function(id, pos, imageNum) {
     var obj = new $mapobj.MapObject(this, id, pos, imageNum);
-    this.objects[pos[0]][pos[1]] = obj;
+    this.objects[pos[0]][pos[1]].add(obj);
     this.objectGroup.add(obj);
     return obj;
   };
   MapScene.prototype.addPerson = function(id, pos, num) {
     var obj = new $people.Person(this, id, pos, num);
-    this.objects[pos[0]][pos[1]] = obj;
+    this.objects[pos[0]][pos[1]].add(obj);
     this.objectGroup.add(obj);
     return obj;
   };
 
   MapScene.prototype.addNPC = function(pos, num, moveCycle) {
     var obj = new $people.NPC(this, pos, num, moveCycle);
-    this.objects[pos[0]][pos[1]] = obj;
+    this.objects[pos[0]][pos[1]].add(obj);
     this.objectGroup.add(obj);
     return obj;
   };
   MapScene.prototype.remove = function(mapObject) {
-    this.objects[mapObject.pos[0]][mapObject.pos[1]] = 0;
+    this.objects[mapObject.pos[0]][mapObject.pos[1]].remove(mapObject);
     this.objectGroup.remove(mapObject);
-  };
-  MapScene.prototype.checkSpace = function(pos, player) {
-    var open = true;
-    var edge = false;
-    var object = false;
-    console.warn(this.tiles[pos[0]][pos[1]]);
-
-    if ((pos[1] > this.objects[0].length - 1) || (pos[1] < 0) || (pos[0] < 0) || (pos[0] > this.objects.length - 1)) {
-      open = false;
-      edge = true;
-      console.log("At edge");
-    } else {
-      if(this.objects[pos[0]][pos[1]] != 0) {
-        open = false;
-        object = this.objects[pos[0]][pos[1]];
-      }
-    };
-    return {
-      open: open,
-      edge: edge,
-      object: object
-    };
   };
   
   MapScene.prototype.changeMap = function(dir) {

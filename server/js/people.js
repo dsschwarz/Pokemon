@@ -1,6 +1,7 @@
 var $globals = require("./globals")
   , $gamejs = require("../lib/gamejs")
-  , $mapobj = require("./mapobject");
+  , $mapobj = require("./mapobject")
+  , $battle = require("./battles/battle");
 var Person = function(map, pos, imageNum){
 	Person.superConstructor.apply(this, arguments);
 	this.imgNum = imageNum || 16;
@@ -63,6 +64,13 @@ Person.prototype.update = function(msDuration) {
 		this.socket.emit("move", this.id, {pos: this.pos, moving: this.moving});
 		this.socket.broadcast.emit("move",  this.id, {pos: this.pos, moving: this.moving});
 		console.log("Person Pos: " + this.pos[0] + ", " + this.pos[1]);
+		if(this.map.tiles[this.pos[0]][this.pos[1]] == 2) {
+			console.log("Battle")
+			var battle = new $battle.Battle(0);
+			this.battle = battle;
+			this.moving = false;
+			$globals.battles.push(battle);
+		};
 	};
 	if (this.move_delay > 0) {
 		this.move_delay -= msDuration;
@@ -78,30 +86,30 @@ Person.prototype.move = function() {
 	if (this.moving === "left") {
 		check = this.map.checkSpace([pos[0], pos[1] - 1]);
 		if(check.open) {
-			this.map.objects[this.pos[0]][this.pos[1]] = 0;
+			this.map.objects[this.pos[0]][this.pos[1]].remove(this);
 			this.pos[1] -= 1;
-			this.map.objects[this.pos[0]][this.pos[1]] = this;
+			this.map.objects[this.pos[0]][this.pos[1]].add(this);
 		};
 	} else if(this.moving === "right") {
 		check = this.map.checkSpace([pos[0], pos[1] + 1]);
 		if(check.open) {
-			this.map.objects[this.pos[0]][this.pos[1]] = 0;
+			this.map.objects[this.pos[0]][this.pos[1]].remove(this);
 			this.pos[1] += 1;
-			this.map.objects[this.pos[0]][this.pos[1]] = this;
+			this.map.objects[this.pos[0]][this.pos[1]].add(this);
 		};
 	} else if(this.moving === "down") {
 		check = this.map.checkSpace([pos[0] + 1, pos[1]]);
 		if(check.open) {
-			this.map.objects[this.pos[0]][this.pos[1]] = 0;
+			this.map.objects[this.pos[0]][this.pos[1]].remove(this);
 			this.pos[0] += 1;
-			this.map.objects[this.pos[0]][this.pos[1]] = this;
+			this.map.objects[this.pos[0]][this.pos[1]].add(this);
 		};
 	} else if(this.moving === "up") {
 		check = this.map.checkSpace([pos[0] - 1, pos[1]]);
 		if(check.open) {
-			this.map.objects[this.pos[0]][this.pos[1]] = 0;
+			this.map.objects[this.pos[0]][this.pos[1]].remove(this);
 			this.pos[0] -= 1;
-			this.map.objects[this.pos[0]][this.pos[1]] = this;
+			this.map.objects[this.pos[0]][this.pos[1]].add(this);
 		};
 	};
 	if (check.edge) {
@@ -134,7 +142,7 @@ Person.prototype.changeMap = function(dir) {
 		console.log("Changing Map")
 		console.log(this.map.mapPos)
 		this.map.objectGroup.add(this);
-		this.map.objects[this.pos[0]][this.pos[1]] = this;
+		this.map.objects[this.pos[0]][this.pos[1]].add(this);
 
 		var objs = [];
 		this.map.objectGroup.forEach(function(obj) {
@@ -143,7 +151,7 @@ Person.prototype.changeMap = function(dir) {
 		this.socket.emit("mapChange", {map: {tiles: this.map.tiles, objects: objs}, number: this.id});
 	} else {
 		this.map.objectGroup.add(this);
-		this.map.objects[this.pos[0]][this.pos[1]] = this;
+		this.map.objects[this.pos[0]][this.pos[1]].add(this);
 	};
 };
 var NonPlayableChar = function(map, pos, imageNum, moveCycle) {
@@ -181,5 +189,5 @@ NonPlayableChar.prototype.update = function(msDuration) {
 this.move_delay -= msDuration;
 
 }
-exports.Person = Person,
-exports.NPC = NonPlayableChar
+exports.Person = Person;
+exports.NPC = NonPlayableChar;

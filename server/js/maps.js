@@ -1,5 +1,6 @@
 exports.MAP_WIDTH = 3;
 exports.MAP_HEIGHT = 3;
+exports.BATTLE_MAP_LENGTH = 1;
 var $map = require("./map")
   , $gamejs = require("../lib/gamejs")
   , fs = require("fs")
@@ -32,7 +33,7 @@ var readMap = function(filePath, callback) {
 };
 
 var maps = [];
-
+var battleMaps = [];
 for (var i = 0; i < exports.MAP_HEIGHT; i++) {
 	var row = [];
 	for (var j = 0; j < exports.MAP_WIDTH; j++) {
@@ -58,5 +59,23 @@ for (var i = 0; i < exports.MAP_HEIGHT; i++) {
 	}
 	maps.push(row);
 };
+for (var j = 0; j < exports.BATTLE_MAP_LENGTH; j++) {
+	var map = {};
+	var filePath = j + ".txt";
+	if (j < 10) {
+		filePath = "0" + j + ".txt";
+	};
+	try {
+		readMap("./server/battleMaps/" + filePath, function(tiles, objects) {
+			map.tiles = tiles;
+			map.objects = objects;
+		});
+	} catch(err) {
+		console.log("Error Reading Map");
+		console.log(err)
+	};
+	battleMaps.push(map);
+}
 
 exports.maps = maps;
+exports.battleMaps = battleMaps;

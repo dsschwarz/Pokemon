@@ -29,10 +29,9 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
       $('#users-list').append("<li>"+player.name+"</li>");
     });
     $globals.connected = true;
-    var map = new $map.MapScene($globals.game.director);
+    var map = new $map.MapScene($globals.game.director, data.map.tiles);
     $globals.game.director.start(map);
     $globals.game.map = map;
-    map.tiles = data.map.tiles;
     data.map.objects.forEach(createObject);
     map.player = getObject(data.number);
 
@@ -43,11 +42,11 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
     socket.on('move', function(number, player) {
       var clientPlayer = getObject(number);
       if (clientPlayer) {
-        clientPlayer.map.objects[clientPlayer.pos[0]][clientPlayer.pos[1]] = 0;
+        clientPlayer.map.objects[clientPlayer.pos[0]][clientPlayer.pos[1]].remove(clientPlayer);
         update_attributes(clientPlayer, player);
         if (clientPlayer.moving)
           clientPlayer.image = clientPlayer.images[clientPlayer.moving];
-        clientPlayer.map.objects[clientPlayer.pos[0]][clientPlayer.pos[1]] = clientPlayer;
+        clientPlayer.map.objects[clientPlayer.pos[0]][clientPlayer.pos[1]].add(clientPlayer);
       };
     });
     socket.on('create', function(obj) {
@@ -57,10 +56,9 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
     socket.on('delete', deleteObject);
     socket.on('mapChange', function(data) {
       console.log("Changing Map");
-      var map = new $map.MapScene($globals.game.director);
+      var map = new $map.MapScene($globals.game.director, data.map.tiles);
       $globals.game.director.replaceScene(map);
       $globals.game.map = map;
-      map.tiles = data.map.tiles;
       data.map.objects.forEach(createObject);
       map.player = getObject(data.number);
     });

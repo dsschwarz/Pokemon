@@ -15,6 +15,10 @@ define(['underscore', 'gamejs', 'modules/globals'], function(_, $gamejs, $global
   	}
     $gamejs.utils.objects.extend(MapObject, $gamejs.sprite.Sprite);
 
+    MapObject.prototype.draw = function(surface, draw_pos) {
+      surface.blit($gamejs.transform.scale(this.image, this.map.TILE_SIZE), 
+        new $gamejs.Rect(draw_pos[0] + (this.map.TILE_SIZE[0] - this.image.getSize()[0])/2, draw_pos[1]));
+    };
     return {
         MapObject: MapObject
     };
