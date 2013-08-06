@@ -47,6 +47,7 @@ define(function() {
   Director.prototype.push = function(scene) {
     this.sceneStack.push(scene);
     this.activeScene = scene;
+    this.onAir = true;
   };
 
   Director.prototype.pop = function() {
@@ -69,6 +70,7 @@ define(function() {
       console.log("Popped to scene")
       this.sceneStack.push(scene);
       this.activeScene = scene;
+      this.onAir = true;
     };
   }
 

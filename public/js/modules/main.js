@@ -4,7 +4,7 @@ define(['underscore', 'gamejs', 'modules/globals', 'modules/scenes/director'],
         var display = $gamejs.display.setMode($globals.game.screenSize, $gamejs.display.FULLSCREEN);
 
         var director = new $director.Director();
-        $globals.game.director = director;
+        $globals.director = director;
 
         var tick = function(msDuration) {
 

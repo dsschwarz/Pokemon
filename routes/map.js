@@ -57,3 +57,6 @@ exports.save = function(req, res) {
 	};
 	res.send(true);
 };
+var yolo = function(other) {
+	console.log('another thing');
+};

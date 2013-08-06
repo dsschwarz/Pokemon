@@ -18,9 +18,9 @@ define(['underscore', 'gamejs', 'modules/globals', 'modules/mapobject'], functio
     $gamejs.utils.objects.extend(Person, $mapobj.MapObject);
     
 	Person.prototype.handle = function(event) {
-    	var $e = $gamejs.event;
-      $globals.socket.emit("playerEvent", event);
-    };
+  	var $e = $gamejs.event;
+    $globals.socket.emit("playerEvent", event);
+  };
   Person.prototype.update = function(msDuration) {
   }; 
 

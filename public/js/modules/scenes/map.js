@@ -1,5 +1,5 @@
-define(['underscore','gamejs', 'modules/globals', 'modules/mapinfo', 'modules/animation', 'modules/mapobject', 'modules/people', 'modules/scenes/battle'], 
-  function(_, $gamejs, $globals, $mapinfo, $anim, $mapobj, $people, $battleScene) {
+define(['underscore','gamejs', 'modules/globals', 'modules/animation', 'modules/mapobject', 'modules/people', 'modules/scenes/battle'], 
+  function(_, $gamejs, $globals, $anim, $mapobj, $people, $battleScene) {
 
   var MapScene = function(director, tiles) {
     this.tiles = tiles || [[0]];

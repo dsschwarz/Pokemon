@@ -1,6 +1,7 @@
 
 
-define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], function(main, $gamejs, $globals, $map) {
+define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map", "modules/scenes/battle"], 
+  function(main, $gamejs, $globals, $map, $battle) {
   $("#gjs-canvas").hide();
   var socket = io.connect('http://localhost:1337');
   // var socket = io.connect('http://192.34.63.118:3000');
@@ -29,9 +30,8 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
       $('#users-list').append("<li>"+player.name+"</li>");
     });
     $globals.connected = true;
-    var map = new $map.MapScene($globals.game.director, data.map.tiles);
-    $globals.game.director.start(map);
-    $globals.game.map = map;
+    var map = new $map.MapScene($globals.director, data.map.tiles);
+    $globals.director.start(map);
     data.map.objects.forEach(createObject);
     map.player = getObject(data.number);
 
@@ -56,19 +56,30 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
     socket.on('delete', deleteObject);
     socket.on('mapChange', function(data) {
       console.log("Changing Map");
-      var map = new $map.MapScene($globals.game.director, data.map.tiles);
-      $globals.game.director.replaceScene(map);
-      $globals.game.map = map;
+      var map = new $map.MapScene($globals.director, data.map.tiles);
+      $globals.director.popAll(map);
       data.map.objects.forEach(createObject);
       map.player = getObject(data.number);
+    });
+    socket.on('startBattle', function(data) {
+      console.log("Loading Battle");
+      var battle = new $battle.BattleScene($globals.director, data.tiles);
+      $globals.director.push(battle);
+      data.objects.forEach(createObject);
+      battle.player = getObject(data.number);
+      console.log(battle.objectGroup.sprites());
+      console.log(battle.player);
+      console.log(data.number)
     });
   });
   var createObject = function(obj) {
     var tempObject = false;
     if(obj.type === "mapobject")
-      tempObject = $globals.game.map.addObject(obj.id, obj.pos, obj.imgNum);
+      tempObject = $globals.director.getScene().addObject(obj.id, obj.pos, obj.imgNum);
     else if(obj.type === "person") {
-      tempObject = $globals.game.map.addPerson(obj.id, obj.pos, obj.imgNum);
+      tempObject = $globals.director.getScene().addPerson(obj.id, obj.pos, obj.imgNum);
+    } else if(obj.type === "pokemon") {
+      tempObject = $globals.director.getScene().addPokemon(obj.id, obj.pos, obj.imgNum);
     };
     update_attributes(tempObject, obj);
     if (tempObject.moving)
@@ -77,7 +88,7 @@ define(['modules/main', "gamejs", "modules/globals", "modules/scenes/map"], func
   }
   var getObject = function(number) {
     var tempObject = false;
-    $globals.game.map.objectGroup.forEach(function(object) {
+    $globals.director.getScene().objectGroup.forEach(function(object) {
       if (object.id === number) {
         tempObject = object;
       };

@@ -1,7 +1,7 @@
 var $maps = require("../maps")
   , $gamejs = require("../../lib/gamejs")
   , $mapobj = require("../mapobject")
-  , $people = require("../people");
+  , $pokemon = require("./pokemon");
 var Battle = function(number) {
   var number = number || 0;
   var mapInfo = $maps.battleMaps[number]; // Two dimensional array of tiles
@@ -33,8 +33,8 @@ Battle.prototype.addObject = function(pos, imageNum) {
   this.objectGroup.add(obj);
   return obj;
 };
-Battle.prototype.addPerson = function(pos, num) {
-  var obj = new $people.Person(this, pos, num);
+Battle.prototype.addPokemon = function(pos, num) {
+  var obj = new $pokemon.Pokemon(this, pos, num);
   this.objects[pos[0]][pos[1]].add(obj);
   this.objectGroup.add(obj);
   return obj;

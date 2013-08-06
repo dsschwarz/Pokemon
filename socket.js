@@ -19,7 +19,11 @@ exports.io = function(socket) {
 		socket.broadcast.emit("new_player", player, {pos: mapPlayer.pos, imgNum: mapPlayer.imgNum, id: mapPlayer.id, type: mapPlayer.type});
 
 		socket.on("playerEvent", function(event) {
-			var action = mapPlayer.handle(event);
+			var action = "";
+			if (mapPlayer.inBattle)
+				action = mapPlayer.battlePlayer.handle(event)
+			else
+				action = mapPlayer.handle(event);
 			// if ((action === "move") || (action === "stop")) {
 			// 	socket.emit("move", player.number, {pos: mapPlayer.pos, moving: mapPlayer.moving});
 			// 	socket.broadcast.emit("move", player.number, {pos: mapPlayer.pos, moving: mapPlayer.moving});

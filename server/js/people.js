@@ -7,6 +7,8 @@ var Person = function(map, pos, imageNum){
 	this.imgNum = imageNum || 16;
 	this.moving = false;
 	this.map = map;
+	this.inBattle = false;
+	this.battlePlayer = {};
 	this.type = "person";
 	this.move_delay = 0;
 	return this;
@@ -63,13 +65,22 @@ Person.prototype.update = function(msDuration) {
 		this.move_delay = 200;
 		this.socket.emit("move", this.id, {pos: this.pos, moving: this.moving});
 		this.socket.broadcast.emit("move",  this.id, {pos: this.pos, moving: this.moving});
-		console.log("Person Pos: " + this.pos[0] + ", " + this.pos[1]);
+		console.info("Person Pos: " + this.pos[0] + ", " + this.pos[1]);
 		if(this.map.tiles[this.pos[0]][this.pos[1]] == 2) {
-			console.log("Battle")
+			console.info("Battle")
 			var battle = new $battle.Battle(0);
 			this.battle = battle;
+			var pokemon = battle.addPokemon([1, 1], 1)
 			this.moving = false;
 			$globals.battles.push(battle);
+			this.inBattle = true;
+			this.battlePlayer = pokemon;
+			pokemon.socket = this.socket;
+			var objs = [];
+			battle.objectGroup.forEach(function(obj) {
+				objs.push({pos: obj.pos, imgNum: obj.imgNum, id: obj.id, type: obj.type, moving: obj.moving})
+			});
+			this.socket.emit("startBattle", {tiles: battle.tiles, objects: objs, number: pokemon.id})
 		};
 	};
 	if (this.move_delay > 0) {
@@ -81,36 +92,15 @@ Person.prototype.update = function(msDuration) {
 
 
 Person.prototype.move = function() {
-	var pos = this.pos;
 	var check = {};
 	if (this.moving === "left") {
-		check = this.map.checkSpace([pos[0], pos[1] - 1]);
-		if(check.open) {
-			this.map.objects[this.pos[0]][this.pos[1]].remove(this);
-			this.pos[1] -= 1;
-			this.map.objects[this.pos[0]][this.pos[1]].add(this);
-		};
+		check = changePos(this, 0, -1);
 	} else if(this.moving === "right") {
-		check = this.map.checkSpace([pos[0], pos[1] + 1]);
-		if(check.open) {
-			this.map.objects[this.pos[0]][this.pos[1]].remove(this);
-			this.pos[1] += 1;
-			this.map.objects[this.pos[0]][this.pos[1]].add(this);
-		};
+		check = changePos(this, 0, 1);
 	} else if(this.moving === "down") {
-		check = this.map.checkSpace([pos[0] + 1, pos[1]]);
-		if(check.open) {
-			this.map.objects[this.pos[0]][this.pos[1]].remove(this);
-			this.pos[0] += 1;
-			this.map.objects[this.pos[0]][this.pos[1]].add(this);
-		};
+		check = changePos(this, 1, 0);
 	} else if(this.moving === "up") {
-		check = this.map.checkSpace([pos[0] - 1, pos[1]]);
-		if(check.open) {
-			this.map.objects[this.pos[0]][this.pos[1]].remove(this);
-			this.pos[0] -= 1;
-			this.map.objects[this.pos[0]][this.pos[1]].add(this);
-		};
+		check = changePos(this, -1, 0);
 	};
 	if (check.edge) {
 		this.changeMap(this.moving);
@@ -172,22 +162,33 @@ $gamejs.utils.objects.extend(NonPlayableChar, Person);
 
 NonPlayableChar.prototype.update = function(msDuration) {
 	if (this.move_delay <= 0) {
-	if ((this.moving) ) {
-		this.move();
-		this.move_delay = 500;
-	}
-	this.moveTimer -= 1;
-	if (this.moveTimer < 0) {
-		this.currentMove ++;
-		if (this.currentMove > this.moveCycle.length - 1) {
-			this.currentMove = 0;
+		if ((this.moving) ) {
+			this.move();
+			this.move_delay = 500;
 		}
-		this.moving = this.moveCycle[this.currentMove].dir;
-		this.moveTimer = this.moveCycle[this.currentMove].spaces;
-	}
-};
-this.move_delay -= msDuration;
+		this.moveTimer -= 1;
+		if (this.moveTimer < 0) {
+			this.currentMove ++;
+			if (this.currentMove > this.moveCycle.length - 1) {
+				this.currentMove = 0;
+			}
+			this.moving = this.moveCycle[this.currentMove].dir;
+			this.moveTimer = this.moveCycle[this.currentMove].spaces;
+		}
+	};
+	this.move_delay -= msDuration;
 
+}
+
+var changePos = function(that, deltaRow, deltaCol) {
+	var check = that.map.checkSpace([that.pos[0] + deltaRow, that.pos[1] + deltaCol]);
+	if(check.open) {
+		that.map.objects[that.pos[0]][that.pos[1]].remove(that);
+		that.pos[0] += deltaRow;
+		that.pos[1] += deltaCol;
+		that.map.objects[that.pos[0]][that.pos[1]].add(that);
+	};
+	return check;
 }
 exports.Person = Person;
 exports.NPC = NonPlayableChar;
